@@ -1,0 +1,20 @@
+.search{
+    width: 35%;
+}
+
+.header-wrap-login{
+    align-items: center;
+    display: flex;
+    height: 40px;
+    left: 70px;
+    min-width: 1242px;
+    position: absolute;
+    top: 12px;
+}
+.content-right-login{
+    align-items: center;
+    display: flex;
+    gap: 40px;
+    justify-content: flex-end;
+    min-width: 1160px;
+}

@@ -1,0 +1,30 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.p-text{
+    margin: 0;
+
+}
+a{
+    text-decoration: none!important;
+}
+.sidebar-item{
+    margin: 10px 0;
+
+}
+
+.active-sidebar{
+    position: relative;
+    color: limegreen;
+}
+.active-sidebar::after {
+    content: "";
+    display: block;
+    height: 90%;
+    width: 3px;
+    background: limegreen;
+    position: absolute;
+    right: 0;
+    top: 2px;
+}

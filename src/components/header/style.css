@@ -44,7 +44,7 @@
 .publicsans-semi-bold-charade-14px {
     color: var(--charade);
     font-family: var(--font-family-public_sans);
-    font-size: var(--font-size-m);
+    font-size: var(--font-size-l);
     font-weight: 600;
     font-style: normal;
 }
@@ -98,7 +98,7 @@
 .main-header {
     align-items: flex-start;
     display: flex;
-    min-width: 1920px;
+    min-width: 1536px;
     position: relative;
     z-index: 1000;
 
@@ -109,10 +109,10 @@
     align-items: center;
     display: flex;
     height: 40px;
-    left: 384px;
+    left: 99px;
     min-width: 1152px;
     position: absolute;
-    top: 24px;
+    top: 12px;
 }
 
 .shadow {
@@ -137,10 +137,10 @@
 
 .header-content {
     align-items: center;
-    height: 88px;
+    height: 64px;
     background-color: white;
     position: fixed;
-    width: 1920px;
+    width: 1536px;
     border-bottom: 1px solid #cecece;
     box-shadow: -10px 10px 20px -4px #919eab3d, 0px 0px 2px #919eab3d;
 }
@@ -154,8 +154,8 @@
 }
 
 .logo-header {
-    height: 40px;
-    width: 40px;
+    height: 32px;
+    width: 32px;
 }
 
 .links {
@@ -239,4 +239,10 @@
 
 .logout {
     cursor: pointer;
+}
+
+.logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
