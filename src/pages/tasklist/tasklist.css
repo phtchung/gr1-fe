@@ -1,0 +1,21 @@
+.tasklist-wrap{
+    margin: 90px 20px 0 20px;
+    display: flex;
+    flex-direction: column;
+}
+.btn-height{
+    height: 56px;
+}
+.search-tab{
+    display: flex;
+    margin: 30px 40px 30px 20px;
+    justify-content:space-between;
+}
+.drop-search{
+    width: 160px;
+    height: 56px;
+}
+.dropdown-toggle::after{
+    margin-left: 4.5em!important;
+
+}
