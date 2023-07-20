@@ -8,13 +8,14 @@ import {Button} from "flowbite-react";
 
 
 const Overview = () => {
-
+    const days = ['Today','Last 1 day', 'Last 1 week']
+    const navigateName = 'overview'
     return (
         <div style={{'width':'1506px'}}>
             <HeaderLogin/>
             <div className="overview-wrap row">
                 <div className="col col-3">
-                    <SidebarUser/>
+                    <SidebarUser data = {navigateName}/>
                 </div>
 
                 <div className="col col-9 ">
@@ -98,66 +99,67 @@ const Overview = () => {
                         <div className="task-list">
                             <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
 
+                                <div className="table-front">
+                                    <span className="publicsans-semi-bold-charade-18px tablename">Today's Task</span>
+                                    <div className="offset-4 bg-white dark:bg-gray-900">
+                                        <label htmlFor="table-search" className="sr-only">Search</label>
+                                        <div className="relative mt-1">
+                                            <div
+                                                className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                                <svg className="w-4 h-4 text-gray-500 dark:text-gray-400"
+                                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                                     viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                          stroke-linejoin="round" stroke-width="2"
+                                                          d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                                                </svg>
+                                            </div>
+                                            <input type="text" id="table-search"
+                                                   className="search-task block pl-10 text-sm text-gray-900 border border-green-300 rounded-lg w-80 bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                   placeholder="Search for items"/>
+                                        </div>
+                                    </div>
 
+
+                                </div>
                                 <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                                     <thead
                                         className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                                     <tr>
 
-                                        <th scope="col" className="px-6 py-3">
-                                            Product name
+                                        <th scope="col" className="px-6 py-3 text-center" style={{width:'10%'}}>
+                                            Task no
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Color
+                                        <th scope="col" className="px-6 py-3 text-center" style={{width:'35%'}}>
+                                            task name
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Category
+                                        <th scope="col" className="px-6 py-3 text-center" style={{width:'15%'}}>
+                                            state
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Price
+                                        <th scope="col" className="px-6 py-3 text-center" style={{width:'20%'}}>
+                                            Date Start
                                         </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Action
+                                        <th scope="col" className="px-6 py-3 text-center" style={{width:'20%'}}>
+                                            Date end
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                                        <th scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Apple MacBook Pro 17"
-                                        </th>
-                                        <td className="px-6 py-4">
-                                            Silver
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            Laptop
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            $2999
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <a href="#"
-                                               className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                        </td>
-                                    </tr>
 
-                                    <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-
-                                        <th scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            Magic Mouse 2
-                                        </th>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-center">
                                             Black
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-center">
+                                            Black
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
                                             Accessories
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-center">
                                             $99
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-center">
                                             <a href="#"
                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                         </td>
@@ -165,20 +167,19 @@ const Overview = () => {
 
                                     <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
 
-                                        <th scope="row"
-                                            className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                            iPad
-                                        </th>
-                                        <td className="px-6 py-4">
-                                            Gold
+                                        <td className="px-6 py-4 text-center">
+                                            Black
                                         </td>
-                                        <td className="px-6 py-4">
-                                            Tablet
+                                        <td className="px-6 py-4 text-center">
+                                            Black
                                         </td>
-                                        <td className="px-6 py-4">
-                                            $699
+                                        <td className="px-6 py-4 text-center">
+                                            Accessories
                                         </td>
-                                        <td className="px-6 py-4">
+                                        <td className="px-6 py-4 text-center">
+                                            $99
+                                        </td>
+                                        <td className="px-6 py-4 text-center">
                                             <a href="#"
                                                className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                                         </td>

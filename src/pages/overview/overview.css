@@ -6,7 +6,7 @@
 }
 .overview-right{
 
-    margin: 128px 20px 0 20px;
+    margin: 90px 20px 0 20px;
 }
 
 .number-row{
@@ -95,4 +95,26 @@
 }
 .task-list{
     margin: 40px 0;
+}
+
+.table-front{
+    display: flex;
+    align-items: center;
+
+    margin: 0 0 20px 0;
+}
+.search-task{
+    width: 110%;
+
+}
+
+.tablename{
+    margin: 0 60px 0 24px;
+}
+
+select{
+    padding: 0;
+}
+select :focus{
+    border: 1px solid green;
 }
