@@ -4,14 +4,17 @@ import {Sidebar} from "flowbite-react";
 import {HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiUser} from "react-icons/hi";
 // import {sidebarItem} from "../../utils/constant";
 import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 
-
-const SidebarUser = () => {
-
-    const [activeItem, setActiveItem] = useState('item1');
+const SidebarUser = ({data}) => {
+    const navigate = useNavigate()
+    const [activeItem, setActiveItem] = useState(data);
 
     const handleClick = (item) => {
-        setActiveItem(item); // Khi click vào item mới, activeItem sẽ được cập nhật
+        setActiveItem(item);
+         // Khi click vào item mới, activeItem sẽ được cập nhật
+        navigate(`/${item}`)
+
     };
 
     return(
@@ -33,9 +36,9 @@ const SidebarUser = () => {
                         {/*        </Sidebar.Item>*/}
                         {/*    ))}*/}
                         <Sidebar.Item
-                            href="#"
                             icon={HiChartPie}
-                            onClick={() => handleClick('item1')} className={activeItem === 'item1' ? 'active-sidebar' : ''}
+                            onClick={() => handleClick('overview')}
+                            className={activeItem === 'overview' ? 'active-sidebar' : ''}
                         >
                             <p className='p-text' >
                                 Overview
@@ -43,18 +46,17 @@ const SidebarUser = () => {
                         </Sidebar.Item>
 
                         <Sidebar.Item
-                            href="#"
                             icon={HiInbox}
-                            onClick={() => handleClick('item2')} className={activeItem === 'item2' ? 'active-sidebar' : ''}
+                            onClick={() => handleClick('tasklist')} className={activeItem === 'tasklist' ? 'active-sidebar' : ''}
                         >
                             <p className='p-text'>
                                 Task List
                             </p>
                         </Sidebar.Item>
                         <Sidebar.Item
-                            href="#"
+
                             icon={HiShoppingBag}
-                            onClick={() => handleClick('item3')} className={activeItem === 'item3' ? 'active-sidebar' : ''}
+                            onClick={() => handleClick('search')} className={activeItem === 'search' ? 'active-sidebar' : ''}
                         >
                             <p className='p-text'>
                                 Search Task
@@ -63,7 +65,7 @@ const SidebarUser = () => {
                         <Sidebar.Item
                             href="#"
                             icon={HiUser}
-                            onClick={() => handleClick('item4')} className={activeItem === 'item4' ? 'active-sidebar' : ''}
+                            onClick={() => handleClick('profile')} className={activeItem === 'profile' ? 'active-sidebar' : ''}
                         >
                             <p className='p-text'>
                                 Users
