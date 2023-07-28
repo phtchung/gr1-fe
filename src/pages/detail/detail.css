@@ -1,0 +1,20 @@
+.detail_task{
+    margin: 100px 70px 40px 20px;
+}
+
+.share_task{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.share_btn{
+    margin: 15px 0 15px 0;
+
+}
+
+.devider{
+    height: 4px;
+    background-color: #2fcb85;
+    color: #2fcb85;
+}
