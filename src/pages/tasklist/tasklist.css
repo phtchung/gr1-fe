@@ -1,21 +1,54 @@
-.tasklist-wrap{
-    margin: 90px 20px 0 20px;
+.list-todo{
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 0 10px;
+
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    box-shadow: rgba(145, 158, 171, 0.2) 0 0 2px 0, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+}
+.background-todo{
+    background-color: #a2efc6;
+}
+.background-inpro{
+    background-color: #fcfacb;
+}
+.background-done{
+    background-color: #ace4f5;
+}
+
+
+.list-wrap{
+    margin:30px;
+}
+.list-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 10px 20px 10px;
+
+}
+.list-item{
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 0 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    box-shadow: rgba(145, 158, 171, 0.2) 0 0 2px 0, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
 }
-.btn-height{
-    height: 56px;
+.margin-item{
+    margin: 0 10px 20px 10px;
 }
-.search-tab{
-    display: flex;
-    margin: 30px 40px 30px 20px;
-    justify-content:space-between;
+.header-sticky{
+    position: sticky;
+    top: -10px;
+    z-index: 1000;
+    height: 45px;
 }
-.drop-search{
-    width: 160px;
-    height: 56px;
-}
-.dropdown-toggle::after{
-    margin-left: 4.5em!important;
-
+.scrollable-col {
+    height: 475px; /* Adjust as needed */
+    overflow-y: auto;
 }
