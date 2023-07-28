@@ -4,7 +4,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import { useState  } from 'react';
 import "./login.css"
 import {Button} from "@mui/material";
-import HeaderLogin from "../../components/header-login";
+// import HeaderLogin from "../../components/header-login";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -44,7 +44,7 @@ const Login = () => {
 
     return (
         <div >
-            <HeaderLogin></HeaderLogin>
+            {/*<HeaderLogin></HeaderLogin>*/}
             <div className="login-wrap" style={{'margin':'60px'}}>
 
                 <div className="login-left">
