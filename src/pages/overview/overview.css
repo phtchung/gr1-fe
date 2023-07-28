@@ -1,12 +1,11 @@
 
-
 .overview-wrap{
     display: flex;
 
 }
 .overview-right{
 
-    margin: 90px 20px 0 20px;
+    margin: 90px 70px 0 20px;
 }
 
 .number-row{
@@ -100,7 +99,7 @@
 .table-front{
     display: flex;
     align-items: center;
-
+    padding: 10px;
     margin: 0 0 20px 0;
 }
 .search-task{
@@ -117,4 +116,13 @@ select{
 }
 select :focus{
     border: 1px solid green;
+}
+
+.myTextField .MuiOutlinedInput-input {
+    height: 25px!important;
+    padding: 8px 15px!important;/* Replace with your height */
+}
+
+.setbg{
+    background-color: #e51414 !important;
 }
