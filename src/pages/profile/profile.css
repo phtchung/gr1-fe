@@ -1,0 +1,48 @@
+.profile-right{
+    margin: 90px 70px 0 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.userinfor{
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    flex-basis: auto;
+    box-sizing: border-box;
+    padding: 25px 15px;
+
+    background-color: rgb(255, 255, 255);
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    box-shadow: rgba(145, 158, 171, 0.2) 0px 0px 2px 0px, rgba(145, 158, 171, 0.12) 0px 12px 24px -4px;
+}
+.userinfor input:focus{
+    outline: none!important;
+}
+[type = text],[type = date]:focus{
+    box-shadow: none!important;
+}
+.outline-input label.Mui-focused{
+    color: #282c34;
+    font-family: var(--font-family-public_sans);
+    font-size: 16px;
+    font-weight: 800;
+    font-style: normal;
+
+}
+
+.outline-input label.MuiFormLabel-root{
+    font-family: var(--font-family-public_sans);
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+}
+.infor-ui{
+    margin: 30px 0;
+}
+
+
+.save-btn{
+    padding: 8px 0!important;
+}
+
