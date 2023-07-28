@@ -13,28 +13,19 @@ const SidebarUser = ({data}) => {
     const handleClick = (item) => {
         setActiveItem(item);
          // Khi click vào item mới, activeItem sẽ được cập nhật
-        navigate(`/${item}`)
+        if(item === 'home'){
+            navigate('.././')
+        }else {
+            navigate(`/${item}`)
+        }
 
     };
 
     return(
-        <div >
-
+        <div className="position-fixed">
             <Sidebar aria-label="Sidebar with multi-level dropdown example" style={{'height':'742px' ,'margin-top':'64px','width':'18rem'}}>
                 <Sidebar.Items>
                     <Sidebar.ItemGroup>
-                        {/*{sidebarItem.map((item, index) => (*/}
-                        {/*        <Sidebar.Item*/}
-                        {/*            href="#"*/}
-                        {/*            icon={ `${item.icon}` }*/}
-                        {/*            className="sidebar-item"*/}
-                        {/*        >*/}
-
-                        {/*            <p className='p-text'>*/}
-                        {/*                {item.name}*/}
-                        {/*            </p>*/}
-                        {/*        </Sidebar.Item>*/}
-                        {/*    ))}*/}
                         <Sidebar.Item
                             icon={HiChartPie}
                             onClick={() => handleClick('overview')}
@@ -73,9 +64,8 @@ const SidebarUser = ({data}) => {
                         </Sidebar.Item>
 
                         <Sidebar.Item
-                            href="#"
                             icon={HiArrowSmRight}
-
+                            onClick={() => handleClick('home')} className={activeItem === 'home' ? 'active-sidebar' : ''}
                         >
                             <p className='p-text'>
                                 Log out
