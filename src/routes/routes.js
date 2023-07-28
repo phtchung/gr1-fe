@@ -20,7 +20,7 @@ export const NormalRoutes = [
     {path: '/profile',element: <Pages.Profile/>},
     {path: '/overview',element: <Pages.Overview/>},
     {path: '/profile',element: <Pages.Profile/>},
-    {path: '/detail',element: <Pages.Detail/>},
+    {path: '/detail/:id', element: <Pages.Detail/>},
     {path: '/tasklist',element: <Pages.TaskList/>},
 
     // {path: '/tutor/:id', element: <Pages.Tutor/>},
