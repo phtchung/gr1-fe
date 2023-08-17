@@ -1,23 +1,56 @@
 import React, {useState} from 'react';
-// import { useQuery } from '@tanstack/react-query';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './profile.css'
-import {TextField , MenuItem} from "@mui/material";
+import {CircularProgress, TextField} from "@mui/material";
 import {Button} from "flowbite-react";
 import Avatar from "../../components/avatar";
-import {user} from "../../utils/constant";
+import useUser from "./useUser";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {updateUserInfo} from "../../services/taskService";
+import {toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const Profile = () => {
+    const id = 1;
     const navigateName = 'profile'
+    const queryClient = useQueryClient();
+    const {
+        userData,
+        isSuccess,
+        isLoading,
 
-    const [dataUser, setDataUser] = useState(user)
-    console.log(dataUser)
+    } = useUser();
+
+    console.log(userData)
+    const [dataUser, setDataUser] = useState(userData)
+
     //lấy id ở đây xong gọi api be lấy thông tin user
     const handleDataUser = (key,value) => {
         setDataUser({ ...dataUser, [key]: value });
-        console.log(dataUser)
+
     }
+
+    const updateUserInfoMutation = useMutation(data => updateUserInfo(data));
+
+    const onSubmit = () => {
+
+        console.log(dataUser);
+        updateUserInfoMutation.mutate(
+            {...dataUser,userId:id},
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ['profileUser'],
+                    });
+                    console.log(":blo")
+                    toast.success('Teacher info updated successfully');
+                    console.log("alo")
+                }
+            }
+        );
+    };
 
 
     return (
@@ -33,22 +66,29 @@ const Profile = () => {
                         <div className="publicsans-semi-bold-charade-18px tablename">
                             Profile
                         </div>
-                    <div className="row">
-                        <div className="col col-4">
-                            <div className="avatar">
-                                <Avatar data={user}/>
+                        {isLoading &&  <>
+                            <CircularProgress className='mt-5 align-self-sm-center' />
+                        </>}
+                        { isSuccess && (
+                            <>
+                            <div className="row">
+                                <div className="col col-4">
+                                    <div className="avatar">
+                                    { isSuccess && <Avatar data={userData}/>}
 
-                            </div>
-                        </div>
+                                    </div>
+                                </div>
                         <div className="col col-8">
+
                             <div className="userinfor row">
                                 <div className="col col-6 infor-ui">
+
                                     <TextField
                                         fullWidth
-                                        id="outlined-required"
+                                        id="filled-disabled"
                                         label="Name"
                                         className="outline-input"
-                                        value={user?.name}
+                                        value={userData?.name}
                                         disabled
                                     />
                                 </div>
@@ -56,9 +96,9 @@ const Profile = () => {
                                     <TextField
                                         fullWidth
                                         id="outlined-required"
-                                        label="Email Address"
+                                        label="Email"
                                         className="outline-input"
-                                        value={user?.email}
+                                        value={userData?.email}
                                         disabled
                                     />
                                 </div>
@@ -68,7 +108,7 @@ const Profile = () => {
                                         id="outlined-required"
                                         label="Gender"
                                         className="outline-input"
-                                        value={user?.gender}
+                                        value={userData?.gender}
                                         disabled
                                     >
                                 </TextField>
@@ -79,28 +119,18 @@ const Profile = () => {
                                         id="outlined-required"
                                         label="Phone Number"
                                         className="outline-input"
-                                        defaultValue={user?.phone_number}
-                                        onChange={(e) => (handleDataUser('phone_number',e.target.value))}
+                                        defaultValue={userData?.phoneNumber}
+                                        onChange={(e) => (handleDataUser('phoneNumber',e.target.value))}
                                     />
                                 </div>
 
                                 <div className="col col-6 infor-ui">
                                     <TextField
                                         fullWidth
-                                        id="outlined-required"
-                                        label="Address"
-                                        className="outline-input"
-                                        defaultValue={user?.address}
-                                        onChange={(e) => (handleDataUser('address',e.target.value))}
-                                    />
-                                </div>
-                                <div className="col col-6 infor-ui">
-                                    <TextField
-                                        fullWidth
                                         id="date"
                                         label="Birthday"
                                         type="date"
-                                        defaultValue={user?.birthday}
+                                        defaultValue={userData?.birthday}
                                         onChange={(e) => handleDataUser('birthday',e.target.value)}
                                         InputLabelProps={{
                                             shrink: true,
@@ -114,25 +144,26 @@ const Profile = () => {
                                         id="outlined-required"
                                         label="About"
                                         className="outline-input"
-                                        defaultValue={user?.about}
+                                        defaultValue={userData?.about}
                                         onChange={(e) => handleDataUser('about',e.target.value)}
 
                                     />
                                 </div>
                             </div>
-                            <div className='float-end infor-ui'>
-                                <Button variant="contained"  className='btn-project btn-height mt-5 save-btn'>
-                                    <span className="text-md-center  text-white  ">Save Changes</span>
+                            <div className='float-end infor-ui' >
+                                <Button  variant="contained" onClick={ onSubmit}  className='btn-project btn-height mt-5 save-btn' >
+                                    <span className="text-md-center  text-white ">Save Changes</span>
                                 </Button>
                             </div>
                         </div>
 
                     </div>
+                            </>
+                        )}
                     </div>
                 </div>
 
             </div>
-
         </div>
     )
 }
