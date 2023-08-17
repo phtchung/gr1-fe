@@ -1,11 +1,10 @@
 import React, {useState} from 'react';
-// import { useQuery } from '@tanstack/react-query';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './overview.css'
 import "../../index.css"
 import {Button} from "flowbite-react";
-import {Checkbox, MenuItem, TextField,FormControlLabel} from "@mui/material";
+import {Checkbox, MenuItem, TextField, FormControlLabel} from "@mui/material";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -13,11 +12,29 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
-import { state, todayTasks, overViewData} from "../../utils/constant";
+import { state, overViewData} from "../../utils/constant";
 import {useNavigate} from "react-router-dom";
+import useListTaskToday from "./useListTaskToday";
+import {addTask} from "../../services/taskService";
+import { toast } from "react-toastify";
 
 const Overview = () => {
     const navigateName = 'overview'
+
+    const {
+        listTasks,
+        isSuccess,
+        isLoading,
+        totalTask,
+        totalTaskDone,
+        refetch
+        // page,
+        // totalPage,
+        // handlePageChange,
+        // queryString,
+        // setQueryString,
+    } = useListTaskToday();
+
     const navigate = useNavigate()
     const [open, setOpen] = React.useState(false);
     const [createTask, setCreateTask] = useState(null);
@@ -30,45 +47,63 @@ const Overview = () => {
     };
 
     const handleCreatTask = (key, value) => {
+
         setCreateTask({ ...createTask, [key]: value });
         console.log(createTask)
     };
 
     const handleCheckboxChange = (event) => {
         setIsChecked(event.target.checked);
-        handleCreatTask('is_notify',event.target.checked)
+        handleCreatTask('isNotify',event.target.checked)
     };
 
     const handleCheckboxChange1 = (event) => {
         setIsImportant(event.target.checked);
-        handleCreatTask('is_important',event.target.checked)
+        handleCreatTask('isImportant',event.target.checked)
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    const sortedTodayTasks = todayTasks.sort((a, b) => {
-        if (b.is_important && !a.is_important) {
-            return 1;
-        } else if (!b.is_important && a.is_important) {
-            return -1;
-        } else {
-            return 0;
+    const handleAddTask = async () => {
+        try {
+            const res = await addTask(
+                {...createTask,userId:Number(1), control:1}
+            );
+            toast.success('This is a success toast message', {
+                position: toast.POSITION.TOP_RIGHT,
+                autoClose: 3000,
+            });
+            refetch()
+        } catch (error) {
+            toast.error(error?.response?.data?.message);
         }
-    });
+        setOpen(false);
+    }
+
+        const sortedTodayTasks = listTasks && listTasks.sort((a, b) => {
+            if (b.isImportant && !a.isImportant) {
+                return 1;
+            } else if (!b.isImportant && a.isImportant) {
+                return -1;
+            } else {
+                return 0;
+            }
+        })
+
     const handleSearch = (e) => {
         setSearch(e.target.value)
-        console.log(search)
+
     }
-    const filteredArray = sortedTodayTasks.filter(obj => {
-        for (let key in obj) {
-            if (typeof obj[key] === 'string' && obj[key].includes(search)) {
-                return true;
-            }
-        }
-        return false;
-    });
+    // const filteredArray = sortedTodayTasks.filter(obj => {
+    //     for (let key in obj) {
+    //         if (typeof obj[key] === 'string' && obj[key].includes(search)) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // });
 
     return (
         <div style={{'width':'1506px'}}>
@@ -94,9 +129,9 @@ const Overview = () => {
                                 </div>
                                 <div className="overview-infor">
                                     <span className="publicsans-semi-bold-charade-14px-overview">TOTAL TASK</span>
-                                    <div className=" publicsans-semi-bold-charade-18px">
-                                        {overViewData.totalTask}
-                                    </div>
+                                    {isSuccess && <div className=" publicsans-semi-bold-charade-18px">
+                                        {totalTask}
+                                    </div>}
                                 </div>
                             </div>
 
@@ -115,7 +150,7 @@ const Overview = () => {
                                 <div className="overview-infor">
                                     <span className="publicsans-semi-bold-charade-14px-overview">TASK DONE</span>
                                     <div className=" publicsans-semi-bold-charade-18px">
-                                        {overViewData.taskDone}
+                                        {totalTaskDone}
                                     </div>
                                 </div>
                             </div>
@@ -159,21 +194,21 @@ const Overview = () => {
                                         <b>Add Task</b>
                                 </DialogTitle>
                                 <DialogContent>
-                                    <div className="row">
+                                    <div className="row mt-2">
                                         <div className="col col-6 infor-ui">
                                             <TextField
                                                 fullWidth
                                                 id="outlined-required"
                                                 label="Task Name"
                                                 className="outline-input"
-                                                onChange={(e) => handleCreatTask("task_name", e.target.value)}
+                                                onChange={(e) => handleCreatTask("taskName", e.target.value)}
                                             />
                                         </div>
                                         <div className="col col-6 infor-ui">
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DatePicker
                                                     label="Date Start"
-                                                    onChange={(newValue) => handleCreatTask('date_start',newValue.format('YYYY-MM-DD'))}
+                                                    onChange={(newValue) => handleCreatTask('dateStart',newValue.format('YYYY-MM-DD'))}
                                                 />
                                             </LocalizationProvider>
                                         </div>
@@ -194,7 +229,7 @@ const Overview = () => {
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DatePicker
                                                     label="Date End"
-                                                    onChange={(newValue) => handleCreatTask('date_end',newValue.format('YYYY-MM-DD'))}
+                                                    onChange={(newValue) => handleCreatTask('dateEnd',newValue.format('YYYY-MM-DD'))}
                                                 />
                                             </LocalizationProvider>
                                         </div>
@@ -234,7 +269,7 @@ const Overview = () => {
                                 </DialogContent>
                                 <DialogActions>
                                     <Button onClick={handleClose}>Cancel</Button>
-                                    <Button onClick={handleClose}>Add Task</Button>
+                                    <Button onClick={handleAddTask}>Add Task</Button>
                                 </DialogActions>
                             </Dialog>
                         </div>
@@ -263,7 +298,6 @@ const Overview = () => {
                                                            placeholder="Search "
                                                             onChange={handleSearch}
                                                     />
-
                                                 </div>
                                             </div>
                                         </div>
@@ -298,19 +332,19 @@ const Overview = () => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {filteredArray.map((todayTask , index) => (
+                                    {isSuccess && sortedTodayTasks.map((todayTask , index) => (
                                         <tr style={{cursor:'pointer'}}
-                                            className={`${todayTask.is_important === true ? 'setbg text-white' : 'bg-white'}  border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 `}
+                                            className={`${todayTask.isImportant === true ? 'setbg text-white' : 'bg-white'}  border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 `}
                                         >
                                             <td className="px-6 py-4 text-center">{index+1}</td>
                                             <td className="px-6 py-4 text-center hover:underline" onClick={() => {
                                                 navigate(
                                                     `/detail/${todayTask.id}`
                                                 )
-                                            }}>{todayTask.task_name}</td>
+                                            }}>{todayTask.taskName}</td>
                                             <td className="px-6 py-4 text-center">{todayTask.state}</td>
-                                            <td className="px-6 py-4 text-center">{todayTask.date_start}</td>
-                                            <td className="px-6 py-4 text-center">{todayTask.date_end}</td>
+                                            <td className="px-6 py-4 text-center">{todayTask.dateStart}</td>
+                                            <td className="px-6 py-4 text-center">{todayTask.dateEnd}</td>
                                         </tr>
                                         ))}
 
