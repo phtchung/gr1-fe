@@ -9,11 +9,19 @@ import {Button} from "flowbite-react";
 import {MenuItem, Pagination, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import { stateFilter, todayTasks} from "../../utils/constant";
+import useListTaskToday from "../overview/useListTaskToday";
 
 
 const Search = () => {
+
     const navigateName = 'search'
     const navigate = useNavigate()
+
+    const {
+        listTask,
+        success,
+        loading
+    } = useListTaskToday();
     const [filters, setFilters] = useState(null);
 
     const handleFilters = (key, value) => {
@@ -21,10 +29,10 @@ const Search = () => {
         console.log(filters)
     };
 
-    const sortedTodayTasks = todayTasks.sort((a, b) => {
-        if (b.is_important && !a.is_important) {
+    const sortedTodayTasks = listTask && listTask.sort((a, b) => {
+        if (b.isImportant && !a.isImportant) {
             return 1;
-        } else if (!b.is_important && a.is_important) {
+        } else if (!b.isImportant && a.isImportant) {
             return -1;
         } else {
             return 0;
@@ -90,19 +98,19 @@ const Search = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {sortedTodayTasks.map((todayTask , index) => (
+                            {success && sortedTodayTasks.map((task , index) => (
                                 <tr style={{cursor:'pointer'}}
-                                    className={`${todayTask.is_important === true ? 'setbg text-white' : 'bg-white'}  border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 `}
+                                    className={`${task.isImportant === true ? 'setbg text-white' : 'bg-white'}  border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 `}
                                 >
                                     <td className="px-6 py-4 text-center">{index+1}</td>
                                     <td className="px-6 py-4 text-center hover:underline" onClick={() => {
                                         navigate(
-                                            `/detail/${todayTask.id}`
+                                            `/detail/${task.id}`
                                         )
-                                    }}>{todayTask.task_name}</td>
-                                    <td className="px-6 py-4 text-center">{todayTask.state}</td>
-                                    <td className="px-6 py-4 text-center">{todayTask.date_start}</td>
-                                    <td className="px-6 py-4 text-center">{todayTask.date_end}</td>
+                                    }}>{task.taskName}</td>
+                                    <td className="px-6 py-4 text-center">{task.state}</td>
+                                    <td className="px-6 py-4 text-center">{task.dateStart}</td>
+                                    <td className="px-6 py-4 text-center">{task.dateEnd}</td>
                                 </tr>
                             ))}
 
