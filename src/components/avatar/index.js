@@ -36,12 +36,12 @@ export default function Avatar({ data }) {
     }, []);
 
     useEffect(() => {
-        if (data.profile_url !== '') {
-            setAvatar(data.profile_url);
+        if (data.profileUrl !== '') {
+            setAvatar(data.profileUrl);
         } else {
             setAvatar(PlaceholderAvatar);
         }
-    }, [data.profile_url])
+    }, [data.profileUrl])
 
 
     const handleChangeButtonClick = (type) => {
@@ -72,7 +72,7 @@ export default function Avatar({ data }) {
                 reader.onload = async () => {
 
                     setAvatar(reader.result);
-                    data.profile_url = avatar;
+                    data.profileUrl = avatar;
                 }
             }
             reader.readAsDataURL(uploadedPhoto);
