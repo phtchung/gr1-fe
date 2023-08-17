@@ -1,17 +1,29 @@
-import React, {useState} from 'react';
+import React from 'react';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './tasklist.css'
 import Item from "../../components/item";
-import {toDoTaskList, inProgressTaskList, doneTaskList} from "../../utils/constant";
+import useListTask from "./useTaskList";
+import {CircularProgress} from "@mui/material";
+
 
 
 const TaskList = () => {
     const navigateName = 'tasklist'
-    // const [value, setValue] = useState(new Date());
 
+    const {
+        listTaskTodo,
+        isSuccessTodo,
+        isLoadingTodo,
+        listTaskInProgress,
+        isSuccessInProgress,
+        isLoadingInProgress,
+        listTaskDone,
+        isSuccessDone,
+        isLoadingDone
+    } = useListTask();
 
-
+    console.log(listTaskTodo)
 
     return (
         <div style={{'width':'1506px'}}>
@@ -32,9 +44,15 @@ const TaskList = () => {
                                 <div className="list-todo background-todo scrollable-col">
                                     <div className="list-header background-todo header-sticky">
                                         <span className="publicsans-semi-bold-charade-14px-overview " style={{'font-size':'18px'}}>Todo</span>
-                                        <span className="publicsans-semi-bold-charade-14px font-bold " style={{'font-size':'18px'}}>{toDoTaskList.length}</span>
+                                        {
+                                            isSuccessTodo &&
+                                            <>
+                                                <span className="publicsans-semi-bold-charade-14px font-bold " style={{'font-size':'18px'}}>
+                                            {listTaskTodo.length}</span>
+                                            </>
+                                        }
                                     </div>
-                                    {toDoTaskList.map((todoList, index) => (
+                                    { isSuccessTodo && listTaskTodo.map((todoList, index) => (
                                         <Item key={index} data={todoList} />
                                     ))}
 
@@ -45,21 +63,38 @@ const TaskList = () => {
                                 <div className="list-todo background-inpro scrollable-col">
                                     <div className="list-header background-inpro header-sticky">
                                         <span className="publicsans-semi-bold-charade-14px-overview " style={{'font-size':'18px'}}>Inprogress</span>
-                                        <span className="publicsans-semi-bold-charade-14px font-bold " style={{'font-size':'18px'}}>{inProgressTaskList.length}</span>
+                                        {
+                                            isSuccessInProgress &&
+                                            <>
+                                                <span className="publicsans-semi-bold-charade-14px font-bold " style={{'font-size':'18px'}}>
+                                            {listTaskInProgress.length}</span>
+                                            </>
+                                        }
                                     </div>
-                                    {inProgressTaskList.map((inProgressList, index) => (
+                                    {isSuccessInProgress && listTaskInProgress.map((inProgressList, index) => (
                                         <Item key={index} data={inProgressList} />
                                     ))}
                                 </div>
                             </div>
 
+
                             <div className="col col-4 ">
+                                {isLoadingDone && <>
+                                    <CircularProgress className='mt-4' />
+                                </>}
                                 <div className="list-todo background-done scrollable-col" >
                                     <div className="list-header background-done header-sticky">
                                         <span className="publicsans-semi-bold-charade-14px-overview " style={{'font-size':'18px'}}>Done</span>
-                                        <span className="publicsans-semi-bold-charade-14px font-bold " style={{'font-size':'18px'}}>{doneTaskList.length}</span>
+                                        {
+                                            isSuccessDone &&
+                                            <>
+                                                <span className="publicsans-semi-bold-charade-14px font-bold " style={{'font-size':'18px'}}>
+                                            {listTaskDone.length}</span>
+                                            </>
+                                        }
                                     </div>
-                                    {doneTaskList.map((doneList, index) => (
+
+                                    {isSuccessDone && listTaskDone.map((doneList, index) => (
                                         <Item key={index} data={doneList} />
                                     ))}
                                 </div>
