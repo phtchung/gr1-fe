@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import './style.css'
 import { useNavigate } from "react-router-dom";
 // import USER from "../../services/userService";
