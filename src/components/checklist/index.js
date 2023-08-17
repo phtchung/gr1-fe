@@ -9,16 +9,27 @@ import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
 import DialogActions from "@mui/material/DialogActions";
 import Dialog from "@mui/material/Dialog";
-import {detailTask, progresses} from "../../utils/constant";
+import { progresses} from "../../utils/constant";
 import {MenuItem, TextField} from "@mui/material";
 import dayjs from "dayjs";
+import {useMutation, useQueryClient} from "@tanstack/react-query";
+import {toast} from "react-toastify";
+import {removeCheckList, updateCheckListInfo} from "../../services/taskService";
+import useTaskDetail from "../../pages/detail/useTaskDetail";
+
 const CheckList = ({data}) => {
+    const {
+        refetch,
 
-    // const [value, setValue] = useState(new Date());
+    } = useTaskDetail();
+    const {checkListId} = data
+    const id = data.taskId
+
     const [progress, setProgress] = useState(data.progress);
-
+    const queryClient = useQueryClient();
     const [open, setOpen] = React.useState(false);
     const [checkListData, setCheckListData] = useState(null);
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -27,6 +38,23 @@ const CheckList = ({data}) => {
         setOpen(false);
     };
 
+    const handleRemoveCheckList = async (id) => {
+
+        try {
+            await removeCheckList({
+                checkListId:checkListId
+            })
+            refetch();
+            // queryClient.invalidateQueries(['getCheckList',id])
+
+            toast.success('Delete success')
+        } catch {
+            toast.error('Delete fail')
+        }
+        setOpen(false);
+    }
+
+
     const handleCheckListData = (key, value) => {
         setCheckListData({ ...checkListData, [key]: value });
         // if(key === 'state'){
@@ -34,6 +62,28 @@ const CheckList = ({data}) => {
         // }
         console.log(checkListData)
     };
+
+    const updateCheckListInfoMutation = useMutation(data => updateCheckListInfo(data));
+
+    const handleUpdateCheckList = () => {
+
+        console.log(data);
+        updateCheckListInfoMutation.mutate(
+            {...checkListData,checkListId:checkListId},
+            {
+                onSuccess: () => {
+                    queryClient.invalidateQueries({
+                        queryKey: ['getCheckList'],
+                    });
+                    toast.success('Teacher info updated successfully');
+                    setOpen(false);
+
+                }
+            }
+        );
+    };
+
+
 
     function calculateRemainingDays( endDate) {
 
@@ -49,11 +99,13 @@ const CheckList = ({data}) => {
 
     return(
         <div>
+
             <div className="list-item1" style={{cursor:'pointer'}} onClick={handleClickOpen}>
                 <div className="list-header margin-item ">
                     <span className="publicsans-semi-bold-charade-18px font-bold " >{data.title}</span>
 
                 </div>
+
                 <Progress
                     color="green"
                     size="lg"
@@ -101,9 +153,9 @@ const CheckList = ({data}) => {
                                 id="outlined-required"
                                 label="Progress"
                                 className="outline-input"
-                                defaultValue={progress}
+                                defaultValue={data?.progress}
                             >
-                                {progresses.map((progress, key) => (
+                                {progresses.map((progress) => (
                                     <MenuItem onClick={() => handleCheckListData('progress', progress.value)} key={progress.value} value={progress.value}>{progress.key}</MenuItem>
                                 ))}
 
@@ -133,9 +185,12 @@ const CheckList = ({data}) => {
                     </div>
 
                 </DialogContent>
-                <DialogActions>
+                <DialogActions >
+                    <Button style={{'margin-right':'260px','background-color':'red'}}  onClick={() => handleRemoveCheckList(id)}>Delete</Button>
+
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleClose}>Update</Button>
+                    <Button onClick={handleUpdateCheckList}>Update</Button>
+
                 </DialogActions>
             </Dialog>
         </div>
