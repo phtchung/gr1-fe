@@ -83,8 +83,6 @@ const CheckList = ({data}) => {
         );
     };
 
-
-
     function calculateRemainingDays( endDate) {
 
         const start = new Date();
@@ -99,13 +97,10 @@ const CheckList = ({data}) => {
 
     return(
         <div>
-
             <div className="list-item1" style={{cursor:'pointer'}} onClick={handleClickOpen}>
                 <div className="list-header margin-item ">
                     <span className="publicsans-semi-bold-charade-18px font-bold " >{data.title}</span>
-
                 </div>
-
                 <Progress
                     color="green"
                     size="lg"
@@ -181,7 +176,6 @@ const CheckList = ({data}) => {
                                 onChange={(e) => handleCheckListData("note",e.target.value)}
                             />
                         </div>
-
                     </div>
 
                 </DialogContent>
