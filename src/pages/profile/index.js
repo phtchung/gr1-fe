@@ -44,9 +44,11 @@ const Profile = () => {
                     queryClient.invalidateQueries({
                         queryKey: ['profileUser'],
                     });
-                    console.log(":blo")
-                    toast.success('Teacher info updated successfully');
-                    console.log("alo")
+
+                    toast.success('User information updated successfully',{
+                        autoClose: 2000,
+                    });
+
                 }
             }
         );
