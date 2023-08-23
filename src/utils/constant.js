@@ -16,6 +16,12 @@ export const progresses = [
 ];
 
 
+export const menuItems = [
+    { value: 1, label: 'Today' },
+    { value: 2, label: 'Last 1 day' },
+    { value: 3, label: 'Last 1 week' }
+];
+
 export const todayTasks = [
     {id : 1 , task_name :'Làm GR1', state:'Todo',date_start :'23/07/2023' , date_end:'25/7/2023',is_important:false},
     {id : 2 , task_name :'Làm Nhúng dùm ', state:'Inprogress',date_start :'22/07/2023' , date_end:'27/7/2023',is_important:true},

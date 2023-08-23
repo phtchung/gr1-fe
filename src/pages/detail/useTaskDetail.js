@@ -1,7 +1,7 @@
 import {useCallback} from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {getCheckList, getDetailTask} from "../../services/taskService";
+import {getCheckList, getDetailTask, getSharedList} from "../../services/taskService";
 
 
 export default function useTaskDetail() {
@@ -37,6 +37,20 @@ export default function useTaskDetail() {
         return {  checkListData };
     }, []);
 
+    const parseDataUser = useCallback((data) => {
+
+        const sharedUser = data?.map((item) => {
+            return {
+                userId : item?.userId,
+                name:item?.name,
+                email: item?.email,
+                phoneNumber: item?.phoneNumber,
+                // control : item?.control,
+            };
+        });
+        return {  sharedUser };
+    }, []);
+
 
 
         const { data : checkList , isSuccess : success, isLoading : loading , refetch } = useQuery({
@@ -47,6 +61,13 @@ export default function useTaskDetail() {
             enabled: !!id,
         });
 
+    const { data : sharedList , isSuccess : sharedSuccess, isLoading : sharedLoading } = useQuery({
+        queryKey: ['getSharedList', id],
+        queryFn: () => getSharedList(id),
+        staleTime: 10 * 1000,
+        select: (data) => parseDataUser(data.data.data),
+        enabled: !!id,
+    });
 
 
     const { data , isSuccess, isLoading } = useQuery({
@@ -64,6 +85,8 @@ export default function useTaskDetail() {
         checkListData:checkList?.checkListData,
         success,
         loading,
+        sharedListUser : sharedList?.sharedUser,
+        sharedSuccess,
         refetch,
         id,
     };

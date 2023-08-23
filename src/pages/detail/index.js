@@ -17,9 +17,16 @@ import Dialog from "@mui/material/Dialog";
 import { state} from "../../utils/constant";
 import dayjs from "dayjs";
 import useTaskDetail from "./useTaskDetail";
-import {createCheckList, ShareTask, updateTaskInfo} from "../../services/taskService";
+import {
+    createCheckList,
+    removeSharedUser,
+    ShareTask,
+    updateTaskInfo
+} from "../../services/taskService";
 import {toast} from "react-toastify";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
+import DeleteIcon from "@mui/icons-material/Delete";
+
 
 
 const Detail = () => {
@@ -30,10 +37,13 @@ const Detail = () => {
         checkListData,
         success,
         loading,
+        sharedListUser,
+        sharedSuccess,
         refetch,
         id,
     } = useTaskDetail();
 
+    const user_id = 1
     const queryClient = useQueryClient();
 
     const [open, setOpen] = React.useState(false);
@@ -72,18 +82,42 @@ const Detail = () => {
     const handleShareTask = async () => {
         try {
             const res = await ShareTask(
-                id,
                 {...shareData,taskId:id}
             );
-
-            toast.success('This is a success toast message', {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000,
-            });
+            if(res.data.result.responseCode === '500'){
+                toast.error("Share unsuccessfully")
+            }else if(res.data.result.responseCode === '401'){
+                toast.error("Share task unsuccessfully . " +
+                    "\n User doesn't exist")
+            }else if(res.data.result.responseCode === '402'){
+                toast.error("Share task unsuccessfully . " +
+                    "\n Can't share task to myself")
+            } else{
+                queryClient.invalidateQueries({queryKey :['getSharedList',id]})
+                toast.success('Share task successfully', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 3000,
+                })
+            }
         } catch (error) {
             toast.error(error?.response?.data?.message);
         }
         setOpen1(false);
+    }
+
+    const handleRemoveSharedUser = async (userId) => {
+        try {
+            await removeSharedUser({
+                taskId:id,
+                userId:userId
+            })
+            queryClient.invalidateQueries({
+                queryKey :['getSharedList',id]
+            })
+            toast.success('Remove user successfully',{autoClose:1000})
+        } catch {
+            toast.error('Remove user fail')
+        }
     }
 
     const handleCreateData = (key, value) => {
@@ -103,9 +137,8 @@ const Detail = () => {
                     queryClient.invalidateQueries({
                         queryKey: ['task_detail'],
                     });
-                    console.log(":blo")
-                    toast.success('Teacher info updated successfully');
-                    console.log("alo")
+                    queryClient.invalidateQueries({queryKey:['taskToday',user_id]})
+                    toast.success('Task is updated successfully');
                 }
             }
         );
@@ -118,7 +151,7 @@ const Detail = () => {
                 {...createData,taskId:id}
             );
 
-            toast.success('This is a success toast message', {
+            toast.success('Add checklist successfully', {
                 position: toast.POSITION.TOP_RIGHT,
                 autoClose: 3000,
             });
@@ -143,11 +176,13 @@ const Detail = () => {
                             <div className="detail_task ">
                             <hr className="mt-lg-5 devider"/>
                             <div className="row">
-                                <div className="share_task">
-                                    <span className="publicsans-semi-bold-charade-14px-overview text-black"
+                                <div className="wrap">
+
+                                <div className="share_task width-80">
+                                    <span className="publicsans-semi-bold-charade-14px-overview text-black taskname"
                                           style={{'font-size': '18px'}}>{taskData?.taskName}</span>
                                     {/*share task*/}
-                                    <div className='share_btn' onClick={handleOpenShare}>
+                                    <div className='share_btn ' onClick={handleOpenShare}>
                                         <Button variant="contained" className='btn-project btn-height  save-btn'>
                                             <span className="text-md-center text-white  ">Share Task</span>
                                         </Button>
@@ -204,16 +239,43 @@ const Detail = () => {
                                             <Button onClick={handleShareTask}>Share Task</Button>
                                         </DialogActions>
                                     </Dialog>
+                                    <div className='share_display'>
+                                         <div className="publicsans-semi-bold-charade-14px mb-4 text-center">Share task with</div>
+                                        <div className='row'>
+                                            {sharedSuccess && sharedListUser.map((user) => (
+                                                <>
+                                                    <div className="record_infor">
+                                                        <div className="col col-7 share_user_info">
+                                                            <span className="publicsans-semi-bold-jade-14px">{user.name}</span>
+
+                                                            <span className="publicsans-normal-charade-12px">{user.phoneNumber}</span>
+                                                        </div>
+                                                        <div className="col col-4 p-0 ">
+                                                            <span className="publicsans-bold-charade-17px">Can view</span>
+                                                        </div>
+
+                                                        <div className="col col-1">
+                                                        <span className="publicsans-semi-bold-charade-14px font-bold "  onClick={() => handleRemoveSharedUser(user.userId)} style={{cursor:'pointer'}}>
+                                                             <DeleteIcon />
+                                                        </span>
+                                                        </div>
+                                                    </div>
+                                                </>
+                                                ))}
+
+                                        </div>
+                                    </div>
                                 </div>
 
 
-                                <div className="col col-3 infor-ui mb-0">
+                                <div className="col  infor-ui mb-0 ">
                                     <TextField
                                         select
                                         fullWidth
                                         id="outlined-required"
                                         label="Status"
                                         className="outline-input "
+                                        style={{width:'25%'}}
                                         defaultValue={taskData?.state}
 
                                     >
@@ -224,7 +286,7 @@ const Detail = () => {
                                     </TextField>
                                 </div>
 
-                                <div className="d-flex">
+                                <div className="d-flex fix-ui">
                                     <div className="col col-6 infor-ui">
                                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                                             <DatePicker
@@ -247,7 +309,7 @@ const Detail = () => {
                                     </div>
                                 </div>
 
-                                <div className="col col-9 infor-ui">
+                                <div className="col col-8 mt-0 infor-ui width-80">
                                     <TextField
                                         fullWidth
                                         id="outlined-required"
@@ -256,6 +318,7 @@ const Detail = () => {
                                         defaultValue={taskData?.description}
                                         onChange={(e) => handleData("description", e.target.value)}
                                     />
+                                </div>
                                 </div>
                             </div>
 

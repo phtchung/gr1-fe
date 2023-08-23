@@ -70,13 +70,31 @@ export const createCheckList = async(checklist) => {
     })
 }
 
-export const ShareTask = async (taskId, shareData) => {
+export const ShareTask = async ( shareData) => {
     return publicHttp({
         method: 'POST',
-        url: `task/share/${taskId}`,
+        url: `task/share`,
         data: shareData
     })
 }
+export const getSharedList = async ( taskId) => {
+    return publicHttp({
+        method: 'GET',
+        url: `/task/share-with-user/${taskId}`,
+    })
+}
+export const removeSharedUser = async ({taskId,userId}) => {
+    return publicHttp({
+        method: 'DELETE',
+        url: '/task/share',
+        data:{
+            taskId,
+            userId
+        },
+
+    })
+}
+
 
 export const removeCheckList = async ({checkListId}) => {
     return publicHttp({
