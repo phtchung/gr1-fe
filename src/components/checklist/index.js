@@ -47,7 +47,7 @@ const CheckList = ({data}) => {
             refetch();
             // queryClient.invalidateQueries(['getCheckList',id])
 
-            toast.success('Delete success')
+            toast.success('Delete successfully')
         } catch {
             toast.error('Delete fail')
         }
@@ -75,7 +75,7 @@ const CheckList = ({data}) => {
                     queryClient.invalidateQueries({
                         queryKey: ['getCheckList'],
                     });
-                    toast.success('Teacher info updated successfully');
+                    toast.success('Checklist info updated successfully');
                     setOpen(false);
 
                 }

@@ -16,6 +16,7 @@
     --font-size-s: 12px;
     --font-size-m: 14px;
     --font-size-l: 15px;
+    --font-size-lxl: 16px;
     --font-size-xl: 48px;
     --font-size-xxl: 96px;
 
@@ -41,6 +42,13 @@
     font-style: normal;
 }
 
+.publicsans-bold-charade-17px {
+    color: var(--charade);
+    font-family: var(--font-family-public_sans);
+    font-size: var(--font-size-lxl);
+    font-weight: 700;
+    font-style: normal;
+}
 .publicsans-semi-bold-charade-14px {
     color: var(--charade);
     font-family: var(--font-family-public_sans);
@@ -69,6 +77,14 @@
     color: var(--white);
     font-family: var(--font-family-public_sans);
     font-size: var(--font-size-l);
+    font-weight: 700;
+    font-style: normal;
+}
+
+.publicsans-bold-white-17px {
+    color: var(--black);
+    font-family: var(--font-family-public_sans);
+    font-size: var(--font-size-lxl);
     font-weight: 700;
     font-style: normal;
 }
