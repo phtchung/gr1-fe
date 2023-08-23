@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState , useEffect} from 'react';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './overview.css'
@@ -12,21 +12,22 @@ import DialogTitle from '@mui/material/DialogTitle';
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker} from "@mui/x-date-pickers/DatePicker";
-import { state, overViewData} from "../../utils/constant";
+import {state, menuItems} from "../../utils/constant";
 import {useNavigate} from "react-router-dom";
 import useListTaskToday from "./useListTaskToday";
 import {addTask} from "../../services/taskService";
 import { toast } from "react-toastify";
 
+
 const Overview = () => {
     const navigateName = 'overview'
-
     const {
         listTasks,
         isSuccess,
         isLoading,
         totalTask,
         totalTaskDone,
+        totalTaskImportant,
         refetch
         // page,
         // totalPage,
@@ -40,7 +41,9 @@ const Overview = () => {
     const [createTask, setCreateTask] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
     const [isImportant, setIsImportant] = useState(false);
-    const [search, setSearch] = useState("");
+    const [inputValue, setInputValue] = useState("");
+    const [selectValue, setSelectValue] = useState(1);
+    const [filteredData, setFilteredData] = useState([]);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -62,6 +65,44 @@ const Overview = () => {
         handleCreatTask('isImportant',event.target.checked)
     };
 
+    const handleSelectState = (e) => {
+        setSelectValue(e.target.value);
+
+    }
+    const handleInputValue = (e) => {
+        setInputValue(e.target.value);
+
+    }
+
+    // const handleFilter = () => {
+    //     const filteredData = listTasks && listTasks.filter((item) => {
+    //         return item.taskName.includes(inputValue)
+    //     });
+    //     setFilteredData(filteredData);
+    // };
+
+    const handleFilterDate = () => {
+        if(selectValue === 2){
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const formattedYesterday = `${yesterday.getFullYear()}-${(yesterday.getMonth() + 1).toString().padStart(2, '0')}-${yesterday.getDate().toString().padStart(2, '0')}`;
+            console.log(formattedYesterday)
+        const filteredData = listTasks && listTasks.filter((item) => {
+            return item.dateEnd > formattedYesterday
+        });
+            setFilteredData(filteredData);}
+
+    };
+
+
+    // useEffect(() => {
+    //     handleFilter();
+    //
+    // }, [inputValue]);
+
+
+
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -71,9 +112,9 @@ const Overview = () => {
             const res = await addTask(
                 {...createTask,userId:Number(1), control:1}
             );
-            toast.success('This is a success toast message', {
+            toast.success('Create task successful', {
                 position: toast.POSITION.TOP_RIGHT,
-                autoClose: 3000,
+                autoClose: 1000,
             });
             refetch()
         } catch (error) {
@@ -92,18 +133,15 @@ const Overview = () => {
             }
         })
 
-    const handleSearch = (e) => {
-        setSearch(e.target.value)
 
-    }
-    // const filteredArray = sortedTodayTasks.filter(obj => {
-    //     for (let key in obj) {
-    //         if (typeof obj[key] === 'string' && obj[key].includes(search)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // });
+    const filteredArray = sortedTodayTasks && sortedTodayTasks.filter(obj => {
+        for (let key in obj) {
+            if (typeof obj[key] === 'string' && obj[key].includes(inputValue)) {
+                return true;
+            }
+        }
+        return false;
+    });
 
     return (
         <div style={{'width':'1506px'}}>
@@ -169,7 +207,7 @@ const Overview = () => {
                                 <div className="overview-infor">
                                     <span className="publicsans-semi-bold-charade-14px-overview">IMPORTANT TASK</span>
                                     <div className=" publicsans-semi-bold-charade-18px">
-                                        {overViewData.importantTask}
+                                        {totalTaskImportant}
                                     </div>
                                 </div>
                             </div>
@@ -296,7 +334,7 @@ const Overview = () => {
                                                     <input type="text" id="table-search"
                                                            className="search-task block pl-10  text-gray-900 border border-green-300 rounded-lg w-80 bg-gray-50 focus:ring-green-500 focus:border-green-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                                            placeholder="Search "
-                                                            onChange={handleSearch}
+                                                            onChange={handleInputValue}
                                                     />
                                                 </div>
                                             </div>
@@ -309,11 +347,12 @@ const Overview = () => {
                                                 id="outlined-required"
                                                 label="ListTask"
                                                 className="outline-input myTextField"
-                                                defaultValue="Today"
+                                                defaultValue={1}
+                                                onChange={handleSelectState}
                                             >
-                                                <MenuItem  value={1}>Today</MenuItem>
-                                                <MenuItem  value={2}>Last 1 day</MenuItem>
-                                                <MenuItem  value={3}>Last 1 week</MenuItem>
+                                                {menuItems.map(item => (
+                                                    <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                                                ))}
                                             </TextField>
                                         </div>
                                     </div>
@@ -332,7 +371,9 @@ const Overview = () => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {isSuccess && sortedTodayTasks.map((todayTask , index) => (
+
+
+                                    {filteredArray && filteredArray.map((todayTask , index) => (
                                         <tr style={{cursor:'pointer'}}
                                             className={`${todayTask.isImportant === true ? 'setbg text-white' : 'bg-white'}  border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 `}
                                         >

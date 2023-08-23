@@ -23,8 +23,9 @@ export default function useListTaskToday(){
         });
         const totalTask = data.totalTask
         const totalTaskDone = data.totalTaskDone
+        const totalTaskImportant = data.totalTaskImportant
 
-        return {totalTaskDone , totalTask, tasks };
+        return {totalTaskDone , totalTask, totalTaskImportant, tasks };
     }, []);
 
     const parseData1 = useCallback((data) => {
@@ -75,6 +76,7 @@ export default function useListTaskToday(){
         listTasks: data?.tasks,
         totalTask: data?.totalTask,
         totalTaskDone : data?.totalTaskDone,
+        totalTaskImportant : data?.totalTaskImportant,
         isSuccess,
         isLoading,
         listTask : taskList?.tasks,
