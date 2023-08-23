@@ -6,11 +6,15 @@ import {HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiUser} from "react-
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
+
 const SidebarUser = ({data}) => {
     const navigate = useNavigate()
+
+
     const [activeItem, setActiveItem] = useState(data);
 
     const handleClick = (item) => {
+
         setActiveItem(item);
          // Khi click vào item mới, activeItem sẽ được cập nhật
         if(item === 'home'){
