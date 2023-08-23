@@ -23,6 +23,9 @@ const Search = () => {
         loading
     } = useListTaskToday();
     const [filters, setFilters] = useState(null);
+    const [data, setData] = useState(listTask);
+
+
 
     const handleFilters = (key, value) => {
         setFilters({ ...filters, [key]: value });
@@ -38,6 +41,15 @@ const Search = () => {
             return 0;
         }
     });
+
+    // const handleSearch = (status) => {
+    //     console.log(status)
+    //     const filteredData = sortedTodayTasks && sortedTodayTasks.filter(item => item.status === status);
+    //     setData(filteredData); // Cập nhật state với dữ liệu đã lọc
+    //     console.log(data)
+    // };
+
+
     return (
         <div style={{'width':'1506px'}}>
             <HeaderLogin/>
@@ -65,7 +77,9 @@ const Search = () => {
                                 >
                                         {Object.entries(stateFilter).map(([key, value]) =>(
                                             <MenuItem onClick={() => handleFilters('stateFilter', value)} key={key} value={key} >{value}</MenuItem>
-                                        ))}
+                                            // <MenuItem onClick={(e) => handleSearch(e.target.value)} key={key} value={key} >{value}</MenuItem>
+
+                                            ))}
                                 </TextField>
 
                             </div>
