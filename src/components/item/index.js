@@ -31,11 +31,18 @@ const Item = ({data}) => {
     const queryClient = useQueryClient();
     const handleRemove = async () => {
         try {
-            await removeTask({
+             const res = await removeTask({
                 taskId:id
             })
-            queryClient.invalidateQueries([stateQuery, user_id])
-            toast.success('Delete success')
+            console.log(res.data.result.responseCode)
+            if(res.data.result.responseCode === '500'){
+                toast.error('Delete not success with sharing task');
+            }else{
+                toast.success('Delete successfully')
+                queryClient.invalidateQueries([stateQuery, user_id])
+                queryClient.invalidateQueries(['taskToday',user_id])
+            }
+
         } catch {
             toast.error('Delete fail')
         }
