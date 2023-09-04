@@ -26,7 +26,8 @@ import {
 import {toast} from "react-toastify";
 import {useMutation, useQueryClient} from "@tanstack/react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import {createCheckListSchema, createTaskSchema} from "../../validation/createValidate";
+import * as yup from 'yup'
 
 
 const Detail = () => {
@@ -45,7 +46,7 @@ const Detail = () => {
 
     const user_id = 1
     const queryClient = useQueryClient();
-
+    const [errors, setErrors] = useState({});
     const [open, setOpen] = React.useState(false);
     const [open1, setOpen1] = React.useState(false);
     const [stateSelect , setStateSelect] = React.useState(taskData?.state);
@@ -62,7 +63,9 @@ const Detail = () => {
         setOpen1(true);
     }
     const handleClose = () => {
+        setCreateData(null);
         setOpen(false);
+        setErrors({})
     };
     const handleCloseShare = () => {
         setOpen1(false);
@@ -73,6 +76,7 @@ const Detail = () => {
         if(key === 'state'){
             setStateSelect(value)
         }
+
         console.log(data)
     };
     const handleShareData = (key, value) => {
@@ -123,6 +127,8 @@ const Detail = () => {
     const handleCreateData = (key, value) => {
       setCreateData({ ...createData, [key]: value });
         console.log(createData)
+        setErrors(prevErrors => ({ ...prevErrors, [key]: '' }));
+
     }
 
     const updateTaskInfoMutation = useMutation(data => updateTaskInfo(data));
@@ -147,19 +153,30 @@ const Detail = () => {
 
     const handleAddCheckList = async () => {
         try {
+            await createCheckListSchema.validate(createData, { abortEarly: false });
             const res = await createCheckList(
                 {...createData,taskId:id}
             );
-
+            refetch();
+            setOpen(false);
+            setCreateData(null);
             toast.success('Add checklist successfully', {
                 position: toast.POSITION.TOP_RIGHT,
                 autoClose: 3000,
             });
         } catch (error) {
-            toast.error(error?.response?.data?.message);
+            if (error instanceof yup.ValidationError){
+                const validationErrors = {};
+                error.inner.forEach(err => {
+                    validationErrors[err.path] = err.message;
+                });
+                setErrors(validationErrors);
+                console.log(validationErrors)
+            }else{
+                toast.error(error?.response?.data?.message);
+            }
         }
-        refetch();
-        setOpen(false);
+
     }
 
     return (
@@ -358,6 +375,8 @@ const Detail = () => {
                                                     id="outlined-required"
                                                     label="Checklist Title"
                                                     className="outline-input"
+                                                    error={!!errors.title}
+                                                    helperText={errors.title || ''}
                                                     onChange={(e) => handleCreateData("title", e.target.value)}
                                                 />
                                             </div>
@@ -383,6 +402,13 @@ const Detail = () => {
                                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                     <DatePicker
                                                         label="Date End"
+                                                        disablePast
+                                                        slotProps={{
+                                                            textField: {
+                                                                helperText: errors.dateEnd ||'' ,
+                                                            },
+                                                            className: errors.dateEnd ? 'red-text' : '',
+                                                        }}
                                                         onChange={(newValue) => handleCreateData('dateEnd', newValue.format('YYYY-MM-DD'))}
                                                     />
                                                 </LocalizationProvider>

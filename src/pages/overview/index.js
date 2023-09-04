@@ -1,4 +1,4 @@
-import React, {useState , useEffect} from 'react';
+import React, {useState } from 'react';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './overview.css'
@@ -17,7 +17,8 @@ import {useNavigate} from "react-router-dom";
 import useListTaskToday from "./useListTaskToday";
 import {addTask} from "../../services/taskService";
 import { toast } from "react-toastify";
-
+import {createTaskSchema} from "../../validation/createValidate";
+import * as yup from 'yup'
 
 const Overview = () => {
     const navigateName = 'overview'
@@ -37,6 +38,8 @@ const Overview = () => {
     } = useListTaskToday();
 
     const navigate = useNavigate()
+    const [errors, setErrors] = useState({});
+    const [error, setError] = React.useState(null);
     const [open, setOpen] = React.useState(false);
     const [createTask, setCreateTask] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
@@ -45,14 +48,18 @@ const Overview = () => {
     const [selectValue, setSelectValue] = useState(1);
     const [filteredData, setFilteredData] = useState([]);
 
+
     const handleClickOpen = () => {
         setOpen(true);
     };
 
     const handleCreatTask = (key, value) => {
+        const updatedCreateTask = { ...createTask, [key]: value };
+        setCreateTask(updatedCreateTask)
+        console.log(updatedCreateTask)
 
-        setCreateTask({ ...createTask, [key]: value });
-        console.log(createTask)
+        setErrors(prevErrors => ({ ...prevErrors, [key]: '' }));
+
     };
 
     const handleCheckboxChange = (event) => {
@@ -73,6 +80,7 @@ const Overview = () => {
         setInputValue(e.target.value);
 
     }
+
 
     // const handleFilter = () => {
     //     const filteredData = listTasks && listTasks.filter((item) => {
@@ -95,32 +103,40 @@ const Overview = () => {
     };
 
 
-    // useEffect(() => {
-    //     handleFilter();
-    //
-    // }, [inputValue]);
-
-
-
-
     const handleClose = () => {
+        setCreateTask(null);
         setOpen(false);
+        setErrors({})
     };
 
     const handleAddTask = async () => {
         try {
-            const res = await addTask(
-                {...createTask,userId:Number(1), control:1}
-            );
-            toast.success('Create task successful', {
-                position: toast.POSITION.TOP_RIGHT,
-                autoClose: 1000,
-            });
-            refetch()
+            await createTaskSchema.validate(createTask, { abortEarly: false });
+                const res = await addTask(
+                    {...createTask, userId: Number(1), control: 1}
+                );
+                toast.success('Create task successful', {
+                    position: toast.POSITION.TOP_RIGHT,
+                    autoClose: 1000,
+                });
+                refetch()
+                setOpen(false);
+                setCreateTask(null);
+
         } catch (error) {
-            toast.error(error?.response?.data?.message);
+            if (error instanceof yup.ValidationError){
+                const validationErrors = {};
+                error.inner.forEach(err => {
+                    validationErrors[err.path] = err.message;
+                });
+                setErrors(validationErrors);
+                console.log(validationErrors)
+            }else{
+                toast.error(error?.response?.data?.message);
+
+            }
         }
-        setOpen(false);
+
     }
 
         const sortedTodayTasks = listTasks && listTasks.sort((a, b) => {
@@ -132,7 +148,6 @@ const Overview = () => {
                 return 0;
             }
         })
-
 
     const filteredArray = sortedTodayTasks && sortedTodayTasks.filter(obj => {
         for (let key in obj) {
@@ -239,6 +254,9 @@ const Overview = () => {
                                                 id="outlined-required"
                                                 label="Task Name"
                                                 className="outline-input"
+                                                defaultValue=""
+                                                error={!!errors.taskName}
+                                                helperText={errors.taskName || ''}
                                                 onChange={(e) => handleCreatTask("taskName", e.target.value)}
                                             />
                                         </div>
@@ -246,6 +264,15 @@ const Overview = () => {
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DatePicker
                                                     label="Date Start"
+                                                    disablePast
+                                                    onError={(errors) => setError(errors)}
+                                                    slotProps={{
+                                                        textField: {
+                                                            helperText: errors.dateStart ||'' ,
+                                                        },
+                                                        className: errors.dateStart ? 'red-text' : '',
+                                                    }}
+
                                                     onChange={(newValue) => handleCreatTask('dateStart',newValue.format('YYYY-MM-DD'))}
                                                 />
                                             </LocalizationProvider>
@@ -257,6 +284,8 @@ const Overview = () => {
                                                 id="outlined-required"
                                                 label="Status"
                                                 className="outline-input"
+                                                error={!!errors.state}
+                                                helperText={errors.state || ''}
                                             >
                                                 {Object.entries(state).map(([key, value]) =>(
                                                     <MenuItem onClick={() => handleCreatTask('state', value)} key={key} value={key} >{value}</MenuItem>
@@ -267,6 +296,13 @@ const Overview = () => {
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DatePicker
                                                     label="Date End"
+                                                    disablePast
+                                                    onError={(errors) => setErrors(true)}
+                                                    slotProps={{
+                                                        textField: {
+                                                            helperText: errors.dateEnd ||'' ,
+                                                        },
+                                                    }}
                                                     onChange={(newValue) => handleCreatTask('dateEnd',newValue.format('YYYY-MM-DD'))}
                                                 />
                                             </LocalizationProvider>
