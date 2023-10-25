@@ -1,13 +1,17 @@
-import {useCallback} from 'react';
+import {useCallback, useMemo} from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {getCheckList, getDetailTask, getSharedList} from "../../services/taskService";
 
 
+
 export default function useTaskDetail() {
     const { id } = useParams();
-
+    const userId = useMemo(() => localStorage.getItem('id'), []);
     const parseData = useCallback((data) => {
+        if(data === undefined){
+          return false
+        }
         const taskData = {
             taskName: data?.taskName,
             state: data?.state,
@@ -16,7 +20,6 @@ export default function useTaskDetail() {
             dateEnd : data?.dateEnd,
             control : data?.control,
         };
-
         return {
             taskData,
         };
@@ -62,8 +65,8 @@ export default function useTaskDetail() {
         });
 
     const { data : sharedList , isSuccess : sharedSuccess, isLoading : sharedLoading } = useQuery({
-        queryKey: ['getSharedList', id],
-        queryFn: () => getSharedList(id),
+        queryKey: ['getSharedList', id,userId],
+        queryFn: () => getSharedList(id,userId),
         staleTime: 10 * 1000,
         select: (data) => parseDataUser(data.data.data),
         enabled: !!id,

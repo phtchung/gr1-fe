@@ -1,4 +1,4 @@
-import React, {useState } from 'react';
+import React, {useMemo, useState} from 'react';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './overview.css'
@@ -22,6 +22,8 @@ import * as yup from 'yup'
 
 const Overview = () => {
     const navigateName = 'overview'
+    const id = useMemo(() => localStorage.getItem('id'), []);
+
     const {
         listTasks,
         isSuccess,
@@ -36,6 +38,7 @@ const Overview = () => {
         // queryString,
         // setQueryString,
     } = useListTaskToday();
+
 
     const navigate = useNavigate()
     const [errors, setErrors] = useState({});
@@ -113,7 +116,7 @@ const Overview = () => {
         try {
             await createTaskSchema.validate(createTask, { abortEarly: false });
                 const res = await addTask(
-                    {...createTask, userId: Number(1), control: 1}
+                    {...createTask, userId: id, control: 1}
                 );
                 toast.success('Create task successful', {
                     position: toast.POSITION.TOP_RIGHT,

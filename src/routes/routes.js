@@ -6,6 +6,11 @@ import * as Pages from '../pages';
 //     {path: '/admin', element: <Pages.Home/>}
 // ];
 
+export const UserRoutes = [
+
+];
+
+
 export const GuestRoutes = [
     {path: '/login', element: <Pages.Login/>},
     {path: '/register', element: <Pages.Register/>},

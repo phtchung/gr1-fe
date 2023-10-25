@@ -1,11 +1,13 @@
-import { useCallback } from 'react';
+import {useCallback, useMemo} from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {getSearchTask, getTaskToday} from "../../services/taskService";
+import {formatDate} from "../../utils/constant";
 
 export default function useListTaskToday(){
 
     // const { id } = useParams();
-    const user_id = 1;
+    const user_id = useMemo(() => localStorage.getItem('id'), []);
+    console.log(user_id)
 
     const parseData = useCallback((data) => {
         const tasks = data?.tasks?.map((item) => {
@@ -14,8 +16,8 @@ export default function useListTaskToday(){
                 taskName: item.taskName,
                 state: item.state,
                 description: item.description,
-                dateStart: item.dateStart,
-                dateEnd: item.dateEnd,
+                dateStart: formatDate(item.dateStart),
+                dateEnd: formatDate(item.dateEnd),
                 isNotify: item.isNotify,
                 isImportant: item.isImportant,
                 control: item.control,
@@ -35,8 +37,8 @@ export default function useListTaskToday(){
                 taskName: item.taskName,
                 state: item.state,
                 description: item.description,
-                dateStart: item.dateStart,
-                dateEnd: item.dateEnd,
+                dateStart: formatDate(item.dateStart),
+                dateEnd: formatDate(item.dateEnd),
                 isNotify: item.isNotify,
                 isImportant: item.isImportant,
                 control: item.control,

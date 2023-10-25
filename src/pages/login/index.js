@@ -1,9 +1,12 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useMemo} from 'react';
 // import { useQuery } from '@tanstack/react-query';
 import {useLocation, useNavigate} from 'react-router-dom';
 import { useState  } from 'react';
 import "./login.css"
 import {Button} from "@mui/material";
+import {toast} from "react-toastify";
+import USER from "../../services/userService";
+
 // import HeaderLogin from "../../components/header-login";
 
 const Login = () => {
@@ -21,26 +24,37 @@ const Login = () => {
         // Thực hiện cuộn trang đến đầu trang khi chuyển trang
         window.scrollTo(0, 0);
     }, [location]);
-    // const handleClick = async () => {
-    //     try {
-    //         const res = await USER.login({
-    //             username: mail,
-    //             password: password
-    //         });
-    //         const token = res?.data?.token;
-    //         if (token) {
-    //             localStorage.setItem('token', token);
-    //         }
-    //         const id = res?.data?.user_id;
-    //         if (id) {
-    //             localStorage.setItem('id', id);
-    //         }
-    //         toast.success('Login success');
-    //         navigate('/');
-    //     } catch (error) {
-    //         toast.error(error?.response?.data?.message);
-    //     }
-    // }
+
+
+    const handleClick = async () => {
+        try {
+            const res = await USER.login({
+                email: mail,
+                password: password
+            });
+            const token = res?.data?.token;
+            console.log(token)
+            if (token) {
+                localStorage.setItem('token', token);
+            }
+            const id = res?.data?.user_id;
+            if (id) {
+                localStorage.setItem('id', id);
+            }
+            toast.success('Login success');
+            navigate('/overview');
+        } catch (error) {
+            toast.error(error?.response?.data?.message);
+        }
+    }
+
+    const token = useMemo(() => localStorage.getItem('token'), []);
+
+    useEffect(() => {
+        if (token) {
+            navigate('/');
+        }
+    }, [navigate, token])
 
     return (
         <div >
@@ -108,7 +122,7 @@ const Login = () => {
                             <span className="login-text13 ">
                                             <span>Forget Password ?</span>
                                         </span>
-                            <Button variant="contained" className='btn-project'>
+                            <Button variant="contained" className='btn-project' onClick={handleClick}>
                                 <span className="login-text15 ">
                                     <span>Sign in </span>
                                 </span>

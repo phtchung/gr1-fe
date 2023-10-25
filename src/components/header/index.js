@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import './style.css'
 import { useNavigate } from "react-router-dom";
 // import USER from "../../services/userService";
@@ -6,22 +6,8 @@ import { useNavigate } from "react-router-dom";
 
 function Header() {
     const navigate = useNavigate();
-    // const token = useMemo(() => localStorage.getItem('token'), []);
-    // const id = useMemo(() => localStorage.getItem('id'), []);
-
-
-
-    // const handleLogout = async () => {
-    //     try {
-    //         await USER.logout();
-    //         localStorage.removeItem('token');
-    //         localStorage.removeItem('id');
-    //         toast.success('Logout success');
-    //         navigate('/login')
-    //     } catch (e) {
-    //         toast.error('Logout failed');
-    //     }
-    // }
+    const token = useMemo(() => localStorage.getItem('token'), []);
+    const id = useMemo(() => localStorage.getItem('id'), []);
 
     return (
         <div className="main-header">
@@ -40,20 +26,6 @@ function Header() {
 
                     <div className="link publicsans-semi-bold-charade-14px content-right">
 
-                        {/*{*/}
-                        {/*    (token && id) ?*/}
-                        {/*        (*/}
-                        {/*            <>*/}
-                        {/*            <div className="link logout" >*/}
-                        {/*            <div className="dashboardpublicsans-semi-bold-jade-14px">*/}
-                        {/*                <span className="publicsans-semi-bold-jade-14px">ログアウト</span>*/}
-                        {/*            </div>*/}
-                        {/*            /!*<img*!/*/}
-                        {/*            /!*    className="iconsic_chevron_left-header"*!/*/}
-                        {/*            /!*    src="../images/icons-ic-chevron-left.svg"*!/*/}
-                        {/*            /!*    alt="icons/ic_chevron_left"*!/*/}
-                                    {/*/>*/}
-                        {/*            </div>*/}
                                     <button className="button-header" onClick={() => {
                                         navigate(
                                             "/register"
@@ -64,11 +36,7 @@ function Header() {
                                             <span className="publicsans-bold-white-14px">Sign up</span>
                                         </div>
                                     </button>
-                                {/*    </>*/}
-                                {/*)*/}
 
-                                {/*:*/}
-                                {/*(*/}
                         <button className="button-header" onClick={() => {
                                     navigate(
                                         "/login"
@@ -80,21 +48,6 @@ function Header() {
                                         <span className="publicsans-bold-white-14px">Sign in</span>
                                     </div>
                                 </button>
-                        {/*}*/}
-                        {/*        <div className="find-tutors" onClick={() => {*/}
-                        {/*            // {*/}
-                        {/*            //     (token && id) ?*/}
-                        {/*            //         navigate(*/}
-                        {/*            //             `/profile/${id}`*/}
-                        {/*            //         ) : navigate(*/}
-                        {/*            //             "/login"*/}
-                        {/*            //         )*/}
-                        {/*            // }*/}
-
-                        {/*        }}>*/}
-                        {/*            <span className="publicsans-semi-bold-charade-14px">教師になる</span>*/}
-                        {/*        </div>*/}
-
                     </div>
                 </div>
             </div>

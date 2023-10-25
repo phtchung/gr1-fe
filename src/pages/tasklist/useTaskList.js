@@ -1,13 +1,16 @@
-import { useCallback } from 'react';
+import {useCallback, useMemo} from 'react';
 
 import { useQuery } from '@tanstack/react-query';
 import {  getTaskDone, getTaskInprogress, getTaskTodo} from "../../services/taskService";
+import {formatDate} from "../../utils/constant";
 
 
 
 export default function useListTask(){
     // const { id } = useParams();
-    const user_id = 1;
+    const user_id = useMemo(() => localStorage.getItem('id'), []);
+
+
 
     const parseData = useCallback((data) => {
         const tasks = data?.map((item) => {
@@ -16,8 +19,8 @@ export default function useListTask(){
                 taskName: item.taskName,
                 state: item.state,
                 description: item.description,
-                dateStart: item.dateStart,
-                dateEnd: item.dateEnd,
+                dateStart: formatDate(item.dateStart),
+                dateEnd: formatDate(item.dateEnd),
                 isNotify: item.isNotify,
                 isImportant: item.isImportant,
                 control: item.control,

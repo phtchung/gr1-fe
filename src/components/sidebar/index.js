@@ -5,6 +5,10 @@ import {HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiUser} from "react-
 // import {sidebarItem} from "../../utils/constant";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
+import {toast} from "react-toastify";
+import USER from "../../services/userService";
+import api from "../../utils/api";
+import token from "../../utils/token";
 
 
 const SidebarUser = ({data}) => {
@@ -13,17 +17,42 @@ const SidebarUser = ({data}) => {
 
     const [activeItem, setActiveItem] = useState(data);
 
-    const handleClick = (item) => {
+    const handleClick = async (item) => {
 
         setActiveItem(item);
-         // Khi click vào item mới, activeItem sẽ được cập nhật
-        if(item === 'home'){
-            navigate('.././')
-        }else {
-            navigate(`/${item}`)
-        }
+        // Khi click vào item mới, activeItem sẽ được cập nhật
 
+            if (item === 'home') {
+                navigate('.././')
+            } else if (item === 'logout') {
+
+            } else {
+                navigate(`/${item}`)
+            }
     };
+   // const handleLogout1 = () => {
+   //      api(`/api/auth/logout`, 'POST')
+   //          .then(response => {
+   //              console.log('response')
+   //              console.log(response);
+   //          })
+   //          .catch(error => {
+   //              console.error(error);
+   //          });
+   //  }
+
+    const handleLogout = async () => {
+        try {
+            await USER.logout();
+            localStorage.removeItem('token');
+            localStorage.removeItem('id');
+            toast.success('Logout success');
+            // navigate('/')
+            navigate('.././')
+        } catch (e) {
+            toast.error('Logout failed');
+        }
+    }
 
     return(
         <div className="position-fixed">
@@ -45,7 +74,7 @@ const SidebarUser = ({data}) => {
                             onClick={() => handleClick('tasklist')} className={activeItem === 'tasklist' ? 'active-sidebar' : ''}
                         >
                             <p className='p-text'>
-                                Task List
+                                Task Created
                             </p>
                         </Sidebar.Item>
                         <Sidebar.Item
@@ -69,7 +98,7 @@ const SidebarUser = ({data}) => {
 
                         <Sidebar.Item
                             icon={HiArrowSmRight}
-                            onClick={() => handleClick('home')} className={activeItem === 'home' ? 'active-sidebar' : ''}
+                            onClick={handleLogout}
                         >
                             <p className='p-text'>
                                 Log out

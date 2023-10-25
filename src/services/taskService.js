@@ -1,8 +1,9 @@
 import publicHttp from "./http/publicHttp.config";
+import privateHttp from "./http/privateHttp.config";
 
 
 export const getTaskToday = async (userId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `/overview/${userId}`,
     })
@@ -10,35 +11,35 @@ export const getTaskToday = async (userId) => {
 
 
 export const getTaskTodo = async (userId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `/todo/${userId}`,
     })
 }
 
 export const getTaskInprogress = async (userId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `/inprogress/${userId}`,
     })
 }
 
 export const getTaskDone = async (userId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `/done/${userId}`,
     })
 }
 
 export const getSearchTask = async (userId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `tasks/${userId}`,
     })
 }
 
 export const addTask = async (task) => {
-    return publicHttp({
+    return privateHttp({
         method: 'POST',
         url: '/create_task',
         data:
@@ -48,7 +49,7 @@ export const addTask = async (task) => {
 }
 
 export const getDetailTask = async (taskId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `task/${taskId}`,
     })
@@ -56,14 +57,14 @@ export const getDetailTask = async (taskId) => {
 
 
 export const getCheckList = async (taskId) => {
-    return publicHttp({
+    return privateHttp({
         method: 'GET',
         url: `task/checklist/${taskId}`,
     })
 }
 
 export const createCheckList = async(checklist) => {
-    return publicHttp({
+    return privateHttp({
         method : 'POST',
         url : '/task/checklist',
         data : checklist
@@ -71,20 +72,24 @@ export const createCheckList = async(checklist) => {
 }
 
 export const ShareTask = async ( shareData) => {
-    return publicHttp({
+    return privateHttp({
         method: 'POST',
         url: `task/share`,
         data: shareData
     })
 }
-export const getSharedList = async ( taskId) => {
-    return publicHttp({
+export const getSharedList = async (taskId,userId) => {
+    return privateHttp({
         method: 'GET',
-        url: `/task/share-with-user/${taskId}`,
+        url: `/task/share-with-user`,
+        params: {
+            id: taskId,
+            userId: userId
+        }
     })
 }
 export const removeSharedUser = async ({taskId,userId}) => {
-    return publicHttp({
+    return privateHttp({
         method: 'DELETE',
         url: '/task/share',
         data:{
@@ -97,7 +102,7 @@ export const removeSharedUser = async ({taskId,userId}) => {
 
 
 export const removeCheckList = async ({checkListId}) => {
-    return publicHttp({
+    return privateHttp({
         method: 'DELETE',
         url: '/task/checklist',
         data:{
@@ -107,7 +112,7 @@ export const removeCheckList = async ({checkListId}) => {
     })
 }
 export const removeTask = async ({taskId}) => {
-    return publicHttp({
+    return privateHttp({
         method: 'DELETE',
         url: '/remove_task',
         data:
@@ -118,7 +123,7 @@ export const removeTask = async ({taskId}) => {
 }
 
 export const updateUserInfo = async (data) => {
-    return publicHttp({
+    return privateHttp({
         method: 'PUT',
         url: '/user',
         data
@@ -127,7 +132,7 @@ export const updateUserInfo = async (data) => {
 
 
 export const updateTaskInfo = async (data) => {
-    return publicHttp({
+    return privateHttp({
         method: 'PUT',
         url: '/task/update',
         data
@@ -135,7 +140,7 @@ export const updateTaskInfo = async (data) => {
 }
 
 export const updateCheckListInfo = async (data) => {
-    return publicHttp({
+    return privateHttp({
         method: 'PUT',
         url: '/task/checklist/update',
         data

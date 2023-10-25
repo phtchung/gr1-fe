@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useMemo, useState} from 'react';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import './profile.css'
@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const Profile = () => {
-    const id = 1;
+    const id = useMemo(() => localStorage.getItem('id'), []);
     const navigateName = 'profile'
     const queryClient = useQueryClient();
     const {
@@ -42,7 +42,7 @@ const Profile = () => {
             {
                 onSuccess: () => {
                     queryClient.invalidateQueries({
-                        queryKey: ['profileUser'],
+                        queryKey: ['getUser'],
                     });
 
                     toast.success('User information updated successfully',{
@@ -110,8 +110,8 @@ const Profile = () => {
                                         id="outlined-required"
                                         label="Gender"
                                         className="outline-input"
-                                        value={userData?.gender}
-                                        disabled
+                                        defaultValue={userData?.gender}
+                                        onChange={(e) => (handleDataUser('gender',e.target.value))}
                                     >
                                 </TextField>
                                 </div>

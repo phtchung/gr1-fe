@@ -8,7 +8,7 @@ import './search.css'
 import {Button} from "flowbite-react";
 import {MenuItem, Pagination, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import { stateFilter, todayTasks} from "../../utils/constant";
+import { stateFilter} from "../../utils/constant";
 import useListTaskToday from "../overview/useListTaskToday";
 
 
@@ -24,8 +24,6 @@ const Search = () => {
     } = useListTaskToday();
     const [filters, setFilters] = useState(null);
     const [data, setData] = useState(listTask);
-
-
 
     const handleFilters = (key, value) => {
         setFilters({ ...filters, [key]: value });

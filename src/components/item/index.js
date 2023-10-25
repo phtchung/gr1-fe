@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useMemo} from 'react';
 
 import './item.css'
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,7 +15,7 @@ const Item = ({data}) => {
     const navigate = useNavigate();
     const {id} = data
     // id : id của task
-    const user_id = 1;
+    const user_id = useMemo(() => localStorage.getItem('id'), []);
     const {state} = data
     let stateQuery = '';
 

@@ -1,10 +1,11 @@
 import React from 'react';
-// import { useQuery } from '@tanstack/react-query';
 import './register.css'
 import { useNavigate } from 'react-router-dom';
 import { useState , useEffect } from 'react';
 import {useLocation} from "react-router-dom";
 import {Button} from "@mui/material";
+import USER from "../../services/userService";
+import {toast} from "react-toastify";
 
 
 
@@ -28,22 +29,25 @@ const Register = () => {
         // Thực hiện cuộn trang đến đầu trang khi chuyển trang
         window.scrollTo(0, 0);
     }, [location]);
-    // const handleClick = async () => {
-    //     try {
-    //         const result = await USER.register({
-    //             username: mail,
-    //             password: password,
-    //         });
-    //         const token = result?.data?.token;
-    //         localStorage.setItem('token', token);
-    //         const id = result?.data?.user_id;
-    //         localStorage.setItem('id', id);
-    //         toast.success('Register success');
-    //         navigate('/');
-    //     } catch(err) {
-    //         toast.error(err?.response?.data?.message);
-    //     }
-    // }
+
+    const handleClick = async () => {
+        try {
+            const result = await USER.register({
+                email: mail,
+                password: password,
+                name    : name
+            });
+            const token = result?.data?.token;
+            localStorage.setItem('token', token);
+            console.log(token)
+            const id = result?.data?.user_id;
+            localStorage.setItem('id', id);
+            toast.success('Register success');
+            navigate('/overview');
+        } catch(err) {
+            toast.error(err?.response?.data?.message);
+        }
+    }
 
     return (
         <div style={{'margin':'60px'}}>
@@ -89,8 +93,8 @@ const Register = () => {
                                     type="text"
                                     placeholder="Fullname"
                                     className="register-input"
-                                    value={mail}
-                                    onChange={handleMailChange}
+                                    value={name}
+                                    onChange={handleNameChange}
                                 />
                                 {/* </div> */}
                             </div>
@@ -118,20 +122,20 @@ const Register = () => {
                                 </div>
                             </div>
 
-                            <div className="login-text-field1">
-                                <div className="login-input1">
+                            {/*<div className="login-text-field1">*/}
+                            {/*    <div className="login-input1">*/}
 
-                                    <input
-                                        type="password"
-                                        placeholder="Confirm Password"
-                                        className="register-input"
-                                        value={password}
-                                        onChange={handlePasswordChange}
-                                    />
-                                </div>
-                            </div>
+                            {/*        <input*/}
+                            {/*            type="password"*/}
+                            {/*            placeholder="Confirm Password"*/}
+                            {/*            className="register-input"*/}
+                            {/*            value={password}*/}
+                            {/*            onChange={handlePasswordChange}*/}
+                            {/*        />*/}
+                            {/*    </div>*/}
+                            {/*</div>*/}
 
-                            <Button variant="contained" className='btn-project'>
+                            <Button variant="contained" className='btn-project' onClick={handleClick}>
                                 <span className="login-text15 ">
                                     <span>Sign up </span>
                                 </span>
