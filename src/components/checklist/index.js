@@ -17,12 +17,16 @@ import {toast} from "react-toastify";
 import {removeCheckList, updateCheckListInfo} from "../../services/taskService";
 import useTaskDetail from "../../pages/detail/useTaskDetail";
 
-const CheckList = ({data}) => {
+const CheckList = (props) => {
     const {
         refetch,
 
     } = useTaskDetail();
+
+    const { control, data } = props;
+
     const {checkListId} = data
+
     const id = data.taskId
 
     const [progress, setProgress] = useState(data.progress);
@@ -60,7 +64,6 @@ const CheckList = ({data}) => {
         // if(key === 'state'){
         //     setStateSelect(value)
         // }
-        console.log(checkListData)
     };
 
     const updateCheckListInfoMutation = useMutation(data => updateCheckListInfo(data));
@@ -179,13 +182,21 @@ const CheckList = ({data}) => {
                     </div>
 
                 </DialogContent>
-                <DialogActions >
-                    <Button style={{'margin-right':'260px','background-color':'red'}}  onClick={() => handleRemoveCheckList(id)}>Delete</Button>
+                {
+                    control === 1 || control === 2 ?
+                        <>
+                            <DialogActions >
+                                <Button style={{'margin-right':'260px','background-color':'red'}}  onClick={() => handleRemoveCheckList(id)}>Delete</Button>
+                                <Button onClick={handleClose}>Cancel</Button>
+                                <Button onClick={handleUpdateCheckList}>Update</Button>
+                            </DialogActions>
+                        </>
+                        :
+                        <>
+                            <Button onClick={handleClose}>Cancel</Button>
+                        </>
+                }
 
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleUpdateCheckList}>Update</Button>
-
-                </DialogActions>
             </Dialog>
         </div>
     )

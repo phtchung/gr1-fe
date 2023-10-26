@@ -34,7 +34,7 @@ const Detail = () => {
     const {
         taskData,
         isSuccess,
-        // isLoading,
+        isLoading,
         checkListData,
         success,
         loading,
@@ -180,8 +180,16 @@ const Detail = () => {
     return (
         <div style={{'width': '1506px'}}>
             <HeaderLogin/>
-            {
-                taskData ?
+            {isLoading &&
+                <>
+                    <div className='d-flex justify-content-center align-items-center' style={{height: '18vh'}}>
+                        <CircularProgress className='mt-4'/>
+                    </div>
+                </>}
+
+
+                {
+                    taskData ?
                     <>
                         <div className="overview-wrap row">
                             <div className="col col-3">
@@ -201,7 +209,7 @@ const Detail = () => {
                                           style={{'font-size': '18px'}}>{taskData?.taskName}</span>
                                                         {/*share task*/}
                                                         {
-                                                            taskData.control == 1 ?
+                                                            taskData.control === 1 ?
                                                                 <>
                                                                     <div className='share_btn '
                                                                          onClick={handleOpenShare}>
@@ -271,7 +279,7 @@ const Detail = () => {
                                                                 <Button onClick={handleShareTask}>Share Task</Button>
                                                             </DialogActions>
                                                         </Dialog>
-                                                        {taskData.control == 1 ?
+                                                        {taskData.control === 1 ?
                                                             <>
                                                                 <div className='share_display'>
                                                                     <div
@@ -381,22 +389,30 @@ const Detail = () => {
                                                     <>
                                                         {checkListData.map((checkListArr, index) => (
                                                             <div className="col col-4 justify-content-between">
-                                                                <CheckList key={index} data={checkListArr}/>
+                                                                <CheckList key={index} control={taskData.control}
+                                                                           data={checkListArr}/>
                                                             </div>
                                                         ))}
                                                     </>
                                                 )}
 
-
                                             </div>
                                             <div>
-                                                <div className='share_btn float-start' onClick={handleClickOpen}>
-                                                    <Button variant="contained"
-                                                            className='btn-project btn-height  save-btn'>
+                                                {
+                                                    taskData.control === 1 || taskData.control === 2 ?
+                                                        <>
+                                                            <div className='share_btn float-start'
+                                                                 onClick={handleClickOpen}>
+                                                                <Button variant="contained"
+                                                                        className='btn-project btn-height  save-btn'>
                                                         <span
                                                             className="text-md-center  text-white  ">Create CheckList</span>
-                                                    </Button>
-                                                </div>
+                                                                </Button>
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        <></>
+                                                }
                                                 <Dialog open={open} onClose={handleClose}>
                                                     <DialogTitle>
                                                         <b>Create Checklist</b>
@@ -469,17 +485,22 @@ const Detail = () => {
                                                     </DialogActions>
                                                 </Dialog>
 
-                                                <div className='share_btn  float-start offset-4'>
-                                                    <Button variant="contained"
-                                                            className='btn-project btn-height  save-btn'
-                                                            onClick={handleUpdateTask}>
-                                                        <span
-                                                            className="text-md-center  text-white  ">Save Changes</span>
-                                                    </Button>
-                                                </div>
+                                                {
+                                                    taskData.control === 1 || taskData.control === 2 ?
+                                                        <>
+                                                            <div className='share_btn  float-start offset-4'>
+                                                                <Button variant="contained"
+                                                                        className='btn-project btn-height  save-btn'
+                                                                        onClick={handleUpdateTask}>
+                                                                <span
+                                                                    className="text-md-center  text-white  ">Save Changes</span>
+                                                                </Button>
+                                                            </div>
+                                                        </>
+                                                        :
+                                                        <></>
+                                                }
                                             </div>
-
-
                                         </div>
                                     </>
                                 )}
@@ -495,7 +516,6 @@ const Detail = () => {
                         </div>
                     </>
             }
-
 
         </div>
     )

@@ -1,2 +1,2 @@
-export const baseUrl = process.env.LINK || 'https://5c41-2405-4802-1c8f-f4d0-e843-5b67-1356-ca6.ngrok-free.app/api';
+export const baseUrl = process.env.LINK || 'https://5c85-2402-800-612a-b24a-dda8-75ba-74b5-fd17.ngrok-free.app/api';
 
