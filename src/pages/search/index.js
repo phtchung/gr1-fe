@@ -10,12 +10,17 @@ import {MenuItem, Pagination, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import { stateFilter} from "../../utils/constant";
 import useListTaskToday from "../overview/useListTaskToday";
+import {useDispatch} from "react-redux";
+import {searchFilter} from "../../redux/action";
+import {useSelector} from "react-redux";
+import {searchSelector} from "../../redux/selector";
 
 
 const Search = () => {
 
     const navigateName = 'search'
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const {
         listTask,
@@ -25,10 +30,35 @@ const Search = () => {
     const [filters, setFilters] = useState(null);
     const [data, setData] = useState(listTask);
 
+    const search = useSelector(searchSelector)
+    console.log(search)
     const handleFilters = (key, value) => {
         setFilters({ ...filters, [key]: value });
-        console.log(filters)
     };
+
+    const dataSearch = (listTask, search) => {
+        if(listTask) {
+            if(search === null){
+                return listTask
+            }
+            if(search.stateFilter === 'All'){
+                return listTask.filter(obj => {
+                    return obj.dateStart.includes(search.date_filter);
+                });
+            }else{
+                return listTask.filter(obj => {
+                    return obj.state.includes(search.stateFilter) && obj.dateStart.includes(search.date_filter);
+                });
+            }
+        }
+    };
+    console.log(dataSearch(listTask,search))
+
+    const handleSearch = () => {
+        if(filters){
+            dispatch(searchFilter(filters))
+        }
+    }
 
     const sortedTodayTasks = listTask && listTask.sort((a, b) => {
         if (b.isImportant && !a.isImportant) {
@@ -84,13 +114,13 @@ const Search = () => {
                             <div>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DatePicker
-                                        label="Pick Date"
+                                        label="Date Start"
                                         onChange={(newValue) => handleFilters('date_filter',newValue.format('YYYY-MM-DD'))}
                                     />
                                 </LocalizationProvider>
                             </div>
                             <div>
-                                <Button variant="contained"  className='btn-project btn-height'>
+                                <Button onClick={handleSearch} variant="contained"  className='btn-project btn-height'>
                                     <span className="text-xl publicsans-semi-bold-charade-15px text-white ml-2 ">Search</span>
                                 </Button>
                             </div>
@@ -110,7 +140,7 @@ const Search = () => {
                             </tr>
                             </thead>
                             <tbody>
-                            {success && sortedTodayTasks.map((task , index) => (
+                            {dataSearch(listTask,search) && dataSearch(listTask,search).map((task , index) => (
                                 <tr style={{cursor:'pointer'}}
                                     className={`${task.isImportant === true ? 'setbg text-white' : 'bg-white'}  border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 `}
                                 >

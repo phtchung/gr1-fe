@@ -59,8 +59,6 @@ const Overview = () => {
     const handleCreatTask = (key, value) => {
         const updatedCreateTask = { ...createTask, [key]: value };
         setCreateTask(updatedCreateTask)
-        console.log(updatedCreateTask)
-
         setErrors(prevErrors => ({ ...prevErrors, [key]: '' }));
 
     };
