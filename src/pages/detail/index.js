@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import HeaderLogin from "../../components/header-login";
 import SidebarUser from "../../components/sidebar";
 import "../../index.css"
@@ -28,6 +28,7 @@ import {useMutation, useQueryClient} from "@tanstack/react-query";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {createCheckListSchema, createTaskSchema} from "../../validation/createValidate";
 import * as yup from 'yup'
+import {Navigate} from "react-router-dom";
 
 
 const Detail = () => {
@@ -177,19 +178,22 @@ const Detail = () => {
         }
 
     }
+
+
+    if(taskData){
+        console.log(taskData.control)
+        if(taskData.control === 0){
+           return <Navigate to={'/overview'}></Navigate>
+        }
+    }
+
+
     return (
         <div style={{'width': '1506px'}}>
             <HeaderLogin/>
-            {isLoading &&
-                <>
-                    <div className='d-flex justify-content-center align-items-center' style={{height: '18vh'}}>
-                        <CircularProgress className='mt-4'/>
-                    </div>
-                </>}
 
 
-                {
-                    taskData ?
+
                     <>
                         <div className="overview-wrap row">
                             <div className="col col-3">
@@ -197,9 +201,17 @@ const Detail = () => {
                             </div>
 
                             <div className="col col-9 ">
-                                {isSuccess && (
-                                    <>
+
+
                                         <div className="detail_task ">
+                                            {isLoading &&
+                                                <>
+                                                    <div className='d-flex justify-content-center align-items-center h-100' style={{height: '100vh'}}>
+                                                        <CircularProgress className='mt-5 text-center'/>
+                                                    </div>
+                                                </>}
+                                            {isSuccess && (
+                                                <>
                                             <hr className="mt-lg-5 devider"/>
                                             <div className="row">
                                                 <div className="wrap">
@@ -501,21 +513,14 @@ const Detail = () => {
                                                         <></>
                                                 }
                                             </div>
+                                                </>
+                                            )}
                                         </div>
-                                    </>
-                                )}
+
+
                             </div>
                         </div>
                     </>
-                    :
-                    <>
-                        <div style={{'margin-top': '100px'}}>
-                            <h3 className="text-center ">404 Not Found</h3>
-                            <div className="text-center">
-                                <a className="text-decoration-none" href="/overview">Home</a></div>
-                        </div>
-                    </>
-            }
 
         </div>
     )

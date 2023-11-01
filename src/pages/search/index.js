@@ -14,7 +14,7 @@ import {useDispatch} from "react-redux";
 import {searchFilter} from "../../redux/action";
 import {useSelector} from "react-redux";
 import {searchSelector} from "../../redux/selector";
-
+import {filterSlice} from "../../redux/reducer";
 
 const Search = () => {
 
@@ -56,7 +56,7 @@ const Search = () => {
 
     const handleSearch = () => {
         if(filters){
-            dispatch(searchFilter(filters))
+            dispatch(filterSlice.actions.search(filters))
         }
     }
 

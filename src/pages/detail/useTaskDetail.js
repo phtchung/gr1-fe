@@ -9,20 +9,24 @@ export default function useTaskDetail() {
     const { id } = useParams();
     const userId = useMemo(() => localStorage.getItem('id'), []);
     const parseData = useCallback((data) => {
-        if(data === undefined){
-          return false
+        let taskData = {};
+
+        if (data.result.ok === false) {
+            taskData = {
+                control: 0
+            };
+        } else {
+            taskData = {
+                taskName: data.data?.taskName,
+                state: data.data?.state,
+                description: data.data?.description,
+                dateStart: data.data?.dateStart,
+                dateEnd: data.data?.dateEnd,
+                control: data.data?.control,
+            };
         }
-        const taskData = {
-            taskName: data?.taskName,
-            state: data?.state,
-            description: data?.description,
-            dateStart: data?.dateStart,
-            dateEnd : data?.dateEnd,
-            control : data?.control,
-        };
-        return {
-            taskData,
-        };
+
+        return { taskData };
     }, []);
 
     const parseData1 = useCallback((data) => {
@@ -77,7 +81,7 @@ export default function useTaskDetail() {
         queryKey: ['task_detail', id],
         queryFn: () => getDetailTask(id),
         staleTime: 10 * 1000,
-        select: (data) => parseData(data.data.data),
+        select: (data) => parseData(data.data),
         enabled: !!id,
     });
 
